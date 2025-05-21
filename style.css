@@ -91,7 +91,7 @@ input[type="number"] {
     background-color: var(--container-bg-color);
     color: var(--default-text-color);
 }
-#autonomie_financiere_checkbox { 
+#autonomie_financiere_checkbox { /* Specific for this checkbox */
     width: auto;
     margin-right: 8px;
     vertical-align: middle;
@@ -261,13 +261,12 @@ input[type="number"]:focus {
     margin-top: 30px; padding: var(--padding-lg);
     border-radius: var(--border-radius-md);
     transition: background-color 0.5s ease-in-out; border: 1px solid var(--border-color);
-    /* border-left will be set by JS */
 }
 .results-summary-section h2 { color: var(--secondary-color); margin-bottom: 15px; text-align:left; border-bottom:none; }
 .results-summary-section p, .results-summary-section ul { color: #444; line-height: 1.6; margin-bottom: 10px;}
 .results-summary-section ul { padding-left: 20px; }
-.arrima-score-display { 
-     font-size: 1.5em; font-weight: bold; color: var(--primary-color); text-align: center; margin-bottom: 20px;
+.arrima-score-display { /* For on-page score display */
+    font-size: 1.5em; font-weight: bold; color: var(--primary-color); text-align: center; margin-bottom: 20px;
 }
 
 .age-validation-message {
