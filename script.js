@@ -202,10 +202,8 @@ function populateRadioGroup(groupId, data, groupName, isSingleColumn = false, is
         input.type = 'radio';
         input.id = `${groupName}_${item.key}`;
         input.name = groupName;
-        input.value = isMaritalStatus ? item.value.toString() : item.key; 
-        // For marital status, the first option ("seul") should be checked by default
-        input.checked = (isMaritalStatus && item.value === false) || (!isMaritalStatus && index === 0); 
-        
+        input.value = isMaritalStatus ? item.value.toString() : item.key; // item.value for marital status
+        input.checked = index === 0; 
         input.onchange = () => { 
             if (isMaritalStatus) {
                 toggleSpouseSection(); 
@@ -221,7 +219,7 @@ function populateRadioGroup(groupId, data, groupName, isSingleColumn = false, is
                  if (event.target.classList.contains('radio-text') || event.target.classList.contains('radio-icon') || event.target === this) {
                     if (!input.checked) { 
                         input.checked = true;
-                        if (isMaritalStatus) toggleSpouseSection();
+                        if (isMaritalStatus) toggleSpouseSection(); // Recalculate if marital status changes
                         calculatePoints(); 
                     }
                     toggleAccordionContent(groupId, `${groupName}_${item.key}_accordion`);
@@ -246,11 +244,7 @@ function getPointsFromRadio(groupName, dataArray) {
     const selectedRadio = document.querySelector(`input[name="${groupName}"]:checked`);
     if (!selectedRadio) return 0;
     const selectedValue = selectedRadio.value;
-    // For marital status, we compare item.value (boolean as string)
-    // For others, we compare item.key (string)
-    const selectedOption = dataArray.find(item => 
-        (D_ARRIMA.maritalStatus.includes(item) ? item.value.toString() === selectedValue : item.key === selectedValue)
-    );
+    const selectedOption = dataArray.find(item => item.key === selectedValue);
     return selectedOption ? (Number(selectedOption.points) || 0) : 0;
 }
 
@@ -347,7 +341,7 @@ function calculatePoints() {
     updatePointsDisplay('education_points_dp', getSanitizedRadioPoints('education_radio_dp', D_ARRIMA.educationLevelsDP));
     updatePointsDisplay('domaine_formation_points_dp', getSanitizedRadioPoints('domaine_formation_radio_dp', D_ARRIMA.domaineFormationDP));
     updatePointsDisplay('experience_points_dp', getSanitizedRadioPoints('experience_radio_dp', D_ARRIMA.experienceLevelsDP));
-    
+
     let dp_score_marche_qc = 0;
     dp_score_marche_qc += getSanitizedRadioPoints('diplome_qc_radio_dp', D_ARRIMA.diplomeQC_DP);
     dp_score_marche_qc += getSanitizedRadioPoints('experience_qc_radio_dp', D_ARRIMA.experienceQC_DP);
@@ -376,7 +370,7 @@ function calculatePoints() {
     let offre_emploi_pts = getSanitizedRadioPoints('offre_emploi_radio', D_ARRIMA.offreEmploiValidee);
     updatePointsDisplay('offre_emploi_points', offre_emploi_pts); 
     let score_sans_offre_emploi = totalArrimaScore; 
-    
+
     let enfants_total_val = getNumericInputVal('enfants_total');
     let enfants_pts = 0;
     if (enfants_total_val === 1) enfants_pts = 30; 
@@ -389,14 +383,14 @@ function calculatePoints() {
     score_sans_offre_emploi += famille_qc_pts; 
 
     totalArrimaScore = score_sans_offre_emploi + offre_emploi_pts; 
-    
+
     document.getElementById('autonomie_financiere_points_display').innerText = 
         document.getElementById('autonomie_financiere_checkbox').checked ? "Exigence Comprise" : "Doit être comprise";
 
     totalArrimaScore = Math.round(totalArrimaScore); 
     document.getElementById('arrima_total_score_display_pdf').innerText = `Score Total Estimé : ${totalArrimaScore} points`; 
     document.querySelector('.arrima-score-display').innerText = `Score Total Estimé : ${totalArrimaScore} points`; 
-    
+
     const interpretationNoJobOfferDiv = document.getElementById('interpretation_no_job_offer_text_pdf');
     const interpretationWithJobOfferDiv = document.getElementById('interpretation_with_job_offer_text_pdf');
     const introNoJobEl = document.getElementById('interpretation_intro_no_job_offer_pdf');
@@ -408,7 +402,6 @@ function calculatePoints() {
     introNoJobEl.innerHTML = ""; adviceNoJobEl.innerHTML = "";
     perspectiveWithJobEl.innerHTML = ""; introWithJobEl.innerHTML = "";
     autonomyReminderElPDF.style.display = 'none';
-
 
     let stickyOverallStatusText = "Amélioration Nécessaire";
     let stickyOverallStatusClass = 'status-low';
@@ -456,28 +449,55 @@ function calculatePoints() {
         if (score_sans_offre_emploi + 180 >= scoreForJobOfferPerspective ) { 
              perspectiveWithJobEl.innerHTML = `<strong>Perspective avec Offre d'Emploi :</strong> Notez qu'une offre d'emploi validée par le MIFI augmente considérablement vos chances (ajoutant entre 180 et 380 points). Si vous obteniez une telle offre, votre profil deviendrait hautement compétitif pour les tirages ciblant ce critère. Votre score total pourrait alors atteindre environ <strong>${score_sans_offre_emploi + 180} à ${score_sans_offre_emploi + 380} points</strong>.`;
         } else {
-            perspectiveWithJobEl.innerHTML = `<strong>Perspective avec Offre d'Emploi :</strong> L'obtention d'une offre d'emploi validée par le MIFI est le facteur le plus puissant pour augmenter vos chances (ajoutant entre 180 et 380 points). Même si votre score actuel est bas, une offre peut changer radicalement la donne et vous rendre compétitif (score potentiel : <strong>${score_sans_offre_emploi + 180} à ${score_sans_offre_emploi + 380} points</strong>).`;
+             perspectiveWithJobEl.innerHTML = `<strong>Perspective avec Offre d'Emploi :</strong> L'obtention d'une offre d'emploi validée par le MIFI est le facteur le plus puissant pour augmenter vos chances (ajoutant entre 180 et 380 points). Même si votre score actuel est bas, une offre peut changer radicalement la donne et vous rendre compétitif (score potentiel : <strong>${score_sans_offre_emploi + 180} à ${score_sans_offre_emploi + 380} points</strong>).`;
         }
          adviceNoJobEl.innerHTML = tempAdvice;
     }
-    
-    const autonomyCheckbox = document.getElementById('autonomie_financiere_checkbox');
-    const autonomyReminderVisible = document.getElementById('autonomy_reminder_pdf'); // Target the element in the visible section
-    if (autonomyCheckbox && autonomyReminderVisible) {
-        if (!autonomyCheckbox.checked) {
-            autonomyReminderVisible.style.display = 'block'; // Show reminder if not checked
-        } else {
-            autonomyReminderVisible.style.display = 'none'; // Hide if checked
-        }
-    }
-    
-    const resultsSectionForDisplay = document.getElementById('results_summary_section_capture_pdf'); // This IS the display section
-    resultsSectionForDisplay.style.backgroundColor = resultsBgColor; 
-    resultsSectionForDisplay.style.borderLeftColor = 
+
+    const resultsSectionToCapture = document.getElementById('results_summary_section_capture_pdf');
+    resultsSectionToCapture.style.backgroundColor = resultsBgColor; 
+    resultsSectionToCapture.style.borderLeftColor = 
         stickyOverallStatusClass === 'status-high' ? 'var(--success-color)' :
         stickyOverallStatusClass === 'status-medium' ? 'var(--accent-color)' : 'var(--error-color)';
-    resultsSectionForDisplay.style.borderLeftWidth = '5px';
-    resultsSectionForDisplay.style.borderLeftStyle = 'solid';
+     // Ensure border style is applied for PDF capture as well
+    resultsSectionToCapture.style.borderLeftWidth = '5px';
+    resultsSectionToCapture.style.borderLeftStyle = 'solid';
+
+    // Update visible results section on the page
+    const visibleResultsSection = document.querySelector('.results-summary-section:not(#results_summary_section_capture_pdf)'); 
+     if(visibleResultsSection) {
+        visibleResultsSection.style.backgroundColor = resultsBgColor;
+        visibleResultsSection.style.borderLeftColor = resultsSectionToCapture.style.borderLeftColor;
+        visibleResultsSection.style.borderLeftWidth = '5px';
+        visibleResultsSection.style.borderLeftStyle = 'solid';
+
+        const visibleIntroNoJob = visibleResultsSection.querySelector('#interpretation_no_job_offer_text_pdf'); // Actually target visible elements
+        const visibleAdviceNoJob = visibleResultsSection.querySelector('#interpretation_advice_list_no_job_offer_pdf');
+        const visiblePerspective = visibleResultsSection.querySelector('#interpretation_perspective_with_job_offer_pdf');
+        const visibleIntroWithJob = visibleResultsSection.querySelector('#interpretation_with_job_offer_text_pdf');
+        const visibleAutonomyReminder = visibleResultsSection.querySelector('#autonomy_reminder_pdf');
+
+        if (offre_emploi_pts > 0) {
+            if(visibleIntroWithJob) visibleIntroWithJob.innerHTML = introWithJobEl.innerHTML;
+            if(visibleIntroNoJob) visibleIntroNoJob.style.display = 'none';
+            if(visibleIntroWithJob) visibleIntroWithJob.style.display = 'block';
+        } else {
+            if(visibleIntroNoJob) visibleIntroNoJob.innerHTML = introNoJobEl.innerHTML;
+            if(visibleAdviceNoJob) visibleAdviceNoJob.innerHTML = adviceNoJobEl.innerHTML;
+            if(visiblePerspective) visiblePerspective.innerHTML = perspectiveWithJobEl.innerHTML;
+            if(visibleIntroNoJob) visibleIntroNoJob.style.display = 'block';
+            if(visibleIntroWithJob) visibleIntroWithJob.style.display = 'none';
+        }
+         if (!document.getElementById('autonomie_financiere_checkbox').checked) {
+            if(visibleAutonomyReminder) {
+                visibleAutonomyReminder.style.display = 'block';
+            }
+            autonomyReminderElPDF.style.display = 'block'; // For PDF
+        } else {
+            if(visibleAutonomyReminder) visibleAutonomyReminder.style.display = 'none';
+            autonomyReminderElPDF.style.display = 'none'; // For PDF
+        }
+    }
 
     document.getElementById('sticky_arrima_score').innerHTML = `Score Arrima: ${totalArrimaScore}`;
     const stickyOverallStatusEl = document.getElementById('sticky_overall_status');
@@ -488,7 +508,7 @@ function calculatePoints() {
     const MAX_ARRIMA_SCORE_FOR_BAR = 750; 
     const tierPercentage = MAX_ARRIMA_SCORE_FOR_BAR > 0 ? Math.min(100, (totalArrimaScore / MAX_ARRIMA_SCORE_FOR_BAR) * 100) : 0;
     tierBar.style.width = tierPercentage + '%';
-    
+
     if (stickyOverallStatusClass === 'status-high') tierBar.style.backgroundColor = 'var(--success-color)';
     else if (stickyOverallStatusClass === 'status-medium') tierBar.style.backgroundColor = 'var(--accent-color)';
     else tierBar.style.backgroundColor = 'var(--error-color)';
@@ -511,7 +531,7 @@ function generatePDF() {
     pdfStatus.textContent = "Génération du PDF en cours...";
 
     const resultsSectionToCapture = document.getElementById('results_summary_section_capture_pdf');
-    
+
     html2canvas(resultsSectionToCapture, { scale: 2, useCORS: true, backgroundColor: null }).then(canvas => {
         const imgData = canvas.toDataURL('image/png');
         const pdf = new jsPDF({
@@ -537,7 +557,7 @@ function generatePDF() {
         const y = (pdfHeight - imgInPdfHeight) / 2;
 
         pdf.addImage(imgData, 'PNG', x, y, imgInPdfWidth, imgInPdfHeight);
-        
+
         const pageCount = pdf.internal.getNumberOfPages();
         for(let i = 1; i <= pageCount; i++) {
             pdf.setPage(i);
@@ -557,12 +577,6 @@ function generatePDF() {
 
 window.onload = () => {
     populateRadioGroup('marital_status_radiogroup', D_ARRIMA.maritalStatus, 'marital_status_radio', false, true); 
-    // --- Initialisation des listeners pour les inputs numériques ---
-    document.getElementById('age_dp').addEventListener('input', calculatePoints);
-    document.getElementById('age_sp').addEventListener('input', calculatePoints);
-    document.getElementById('enfants_total').addEventListener('input', calculatePoints);
-    document.getElementById('autonomie_financiere_checkbox').addEventListener('change', calculatePoints);
-
     populateRadioGroup('fr_co_radiogroup_dp', D_ARRIMA.frLangLevelsDP_Oral, 'fr_co_radio_dp');
     populateRadioGroup('fr_po_radiogroup_dp', D_ARRIMA.frLangLevelsDP_Oral, 'fr_po_radio_dp');
     populateRadioGroup('fr_ce_radiogroup_dp', D_ARRIMA.frLangLevelsDP_Ecrit, 'fr_ce_radio_dp', true);
@@ -576,7 +590,7 @@ window.onload = () => {
     populateRadioGroup('experience_radiogroup_dp', D_ARRIMA.experienceLevelsDP, 'experience_radio_dp');
     populateRadioGroup('diplome_qc_radiogroup_dp', D_ARRIMA.diplomeQC_DP, 'diplome_qc_radio_dp', true);
     populateRadioGroup('experience_qc_radiogroup_dp', D_ARRIMA.experienceQC_DP, 'experience_qc_radio_dp', true);
-    
+
     populateRadioGroup('fr_co_radiogroup_sp', D_ARRIMA.frLangLevelsSP_Oral, 'fr_co_radio_sp');
     populateRadioGroup('fr_po_radiogroup_sp', D_ARRIMA.frLangLevelsSP_Oral, 'fr_po_radio_sp');
     populateRadioGroup('education_radiogroup_sp', D_ARRIMA.educationLevelsSP, 'education_radio_sp');
@@ -584,14 +598,7 @@ window.onload = () => {
 
     populateRadioGroup('offre_emploi_radiogroup', D_ARRIMA.offreEmploiValidee, 'offre_emploi_radio', true);
     populateRadioGroup('famille_qc_radiogroup', D_ARRIMA.familleQC, 'famille_qc_radio', true);
-    
-    const pdfButton = document.getElementById('generate_pdf_button');
-    if(pdfButton) pdfButton.addEventListener('click', generatePDF);
-
 
     toggleSpouseSection(); 
     calculatePoints();
 };
-</script>
-</body>
-</html>
