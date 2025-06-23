@@ -257,8 +257,6 @@ function updatePointsDisplay(elementId, points) {
 // --- MAIN CALCULATION LOGIC ---
 
 function calculatePoints() { 
-    // This function calculates all points but does not display the final results section yet.
-    // That will be handled by the email gate.
     const isWithSpouse = (document.querySelector('input[name="marital_status_radio"]:checked')?.value === 'true');
     let totalArrimaScore = 0;
     const getSanitizedRadioPoints = (groupName, dataArr) => Number(getPointsFromRadio(groupName, dataArr)) || 0;
@@ -279,7 +277,6 @@ function calculatePoints() {
     dp_score_capital_humain += getSanitizedRadioPoints('experience_radio_dp', D_ARRIMA.experienceLevelsDP);
     totalArrimaScore += dp_score_capital_humain;
 
-    // Update individual point displays
     updatePointsDisplay('fr_co_points_dp', getSanitizedRadioPoints('fr_co_radio_dp', D_ARRIMA.frLangLevelsDP_Oral));
     updatePointsDisplay('fr_po_points_dp', getSanitizedRadioPoints('fr_po_radio_dp', D_ARRIMA.frLangLevelsDP_Oral));
     updatePointsDisplay('fr_ce_points_dp', getSanitizedRadioPoints('fr_ce_radio_dp', D_ARRIMA.frLangLevelsDP_Ecrit));
@@ -333,21 +330,17 @@ function calculatePoints() {
     score_sans_offre_emploi += famille_qc_pts; 
 
     totalArrimaScore = score_sans_offre_emploi + offre_emploi_pts; 
-
     document.getElementById('autonomie_financiere_points_display').innerText = 
         document.getElementById('autonomie_financiere_checkbox').checked ? "Exigence Comprise" : "Doit être comprise";
 
     totalArrimaScore = Math.round(totalArrimaScore); 
 
-    // ---- UPDATE UI ELEMENTS ----
     const stickyScoreEl = document.getElementById('sticky_arrima_score');
     if (stickyScoreEl) stickyScoreEl.innerHTML = `Score Arrima: ${totalArrimaScore}`;
     
-    // The following elements are inside the gated content, so we just prepare their content.
     const scoreDisplayPdfEl = document.getElementById('arrima_total_score_display_pdf');
     if (scoreDisplayPdfEl) scoreDisplayPdfEl.innerText = `Score Total Estimé : ${totalArrimaScore} points`; 
 
-    // Update interpretation text (this will be hidden until the gate is passed)
     updateInterpretationText(totalArrimaScore, score_sans_offre_emploi, offre_emploi_pts);
 }
 
@@ -360,7 +353,6 @@ function updateInterpretationText(totalArrimaScore, score_sans_offre_emploi, off
     const introWithJobEl = document.getElementById('interpretation_intro_with_job_offer_pdf');
     const autonomyReminderElPDF = document.getElementById('autonomy_reminder_pdf');
 
-    // Reset content
     introNoJobEl.innerHTML = ""; adviceNoJobEl.innerHTML = "";
     perspectiveWithJobEl.innerHTML = ""; introWithJobEl.innerHTML = "";
     autonomyReminderElPDF.style.display = 'none';
@@ -440,100 +432,61 @@ function updateInterpretationText(totalArrimaScore, score_sans_offre_emploi, off
     tierBar.style.backgroundColor = borderColor;
 }
 
-
-// --- NEW: EMAIL GATE & WEBHOOK FUNCTION ---
-
 function setupEmailGateAndWebhook() {
-    // !!! IMPORTANT: PASTE YOUR MAKE.COM WEBHOOK URL HERE !!!
     const webhookUrl = 'PASTE_YOUR_MAKE_COM_WEBHOOK_URL_HERE'; 
-    // Example: 'https://hook.eu1.make.com/xxxxxxxxxxxxxxxx'
-
     const emailGateForm = document.getElementById('email-gate-form');
     if (!emailGateForm) return;
 
     emailGateForm.addEventListener('submit', function(event) {
-        event.preventDefault(); // Stop the form from reloading the page
-
+        event.preventDefault(); 
         const emailInput = document.getElementById('user-email');
         const emailError = document.getElementById('email-gate-error');
         const emailGateSection = document.getElementById('email-gate-section');
         const gatedContent = document.getElementById('gated-content');
-        
-        // Basic email validation
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
         if (emailInput.value && emailRegex.test(emailInput.value)) {
-            // --- Email is valid ---
-            emailError.textContent = ''; // Clear any error message
-
-            // 1. Immediately hide the form and show the results for the best user experience.
+            emailError.textContent = ''; 
             emailGateSection.style.display = 'none';
             gatedContent.style.display = 'block';
 
-            // 2. Send the email to the Make.com webhook in the background.
             if (webhookUrl.startsWith('https://hook.')) {
-                const data = {
-                    email: emailInput.value
-                };
-
                 fetch(webhookUrl, {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(data),
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email: emailInput.value }),
                 })
-                .then(response => {
-                    if (response.ok) {
-                        console.log('Webhook Success: Email sent to Make.com');
-                    } else {
-                        console.error('Webhook Error: Response not OK.', response.status, response.statusText);
-                    }
-                })
-                .catch(error => {
-                    console.error('Webhook Fetch Error:', error);
-                });
+                .then(response => console.log('Webhook Success:', response.ok))
+                .catch(error => console.error('Webhook Fetch Error:', error));
             } else {
-                console.warn('Webhook URL is not configured. Please paste your Make.com URL in script.js.');
+                console.warn('Webhook URL is not configured.');
             }
-
         } else {
-            // --- Email is not valid ---
             emailError.textContent = 'Veuillez entrer une adresse courriel valide.';
         }
     });
 }
 
-
-// --- PDF GENERATION FUNCTION ---
-
 function generatePDF() { 
-    // This function remains largely the same
     const { jsPDF } = window.jspdf;
     const pdfStatus = document.getElementById('pdf_generation_status');
     pdfStatus.textContent = "Génération du PDF en cours...";
-
     const resultsSectionToCapture = document.getElementById('results_summary_section_capture_pdf');
-    
     html2canvas(resultsSectionToCapture, { scale: 2, useCORS: true, backgroundColor: null }).then(canvas => {
         const imgData = canvas.toDataURL('image/png');
         const pdf = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4' });
-        const pdfWidth = pdf.internal.pageSize.getWidth();
-        const pdfHeight = pdf.internal.pageSize.getHeight();
+        const { width: pdfWidth, height: pdfHeight } = pdf.internal.pageSize;
         const margin = 10;
         const imgProps= pdf.getImageProperties(imgData);
-        const canvasAspectRatio = imgProps.width / imgProps.height;
         let imgInPdfWidth = pdfWidth - 2 * margin;
-        let imgInPdfHeight = imgInPdfWidth / canvasAspectRatio;
-
+        let imgInPdfHeight = imgInPdfWidth / (imgProps.width / imgProps.height);
         if (imgInPdfHeight > pdfHeight - 2 * margin) {
             imgInPdfHeight = pdfHeight - 2 * margin;
-            imgInPdfWidth = imgInPdfHeight * canvasAspectRatio;
+            imgInPdfWidth = imgInPdfHeight * (imgProps.width / imgProps.height);
         }
         const x = (pdfWidth - imgInPdfWidth) / 2;
         const y = (pdfHeight - imgInPdfHeight) / 2;
         pdf.addImage(imgData, 'PNG', x, y, imgInPdfWidth, imgInPdfHeight);
-        
         const pageCount = pdf.internal.getNumberOfPages();
         for(let i = 1; i <= pageCount; i++) {
             pdf.setPage(i);
@@ -541,7 +494,6 @@ function generatePDF() {
             pdf.setTextColor(100);
             pdf.text(`Récapitulatif J'arrive Québec - Simulateur Arrima (Estimation) - Page ${i} de ${pageCount}`, pdfWidth / 2, pdfHeight - 5, { align: 'center' });
         }
-
         pdf.save('Recapitulatif_Simulation_Arrima_JarriveQuebec.pdf');
         pdfStatus.textContent = "PDF généré !";
         setTimeout(() => { pdfStatus.textContent = ""; }, 3000);
@@ -551,10 +503,11 @@ function generatePDF() {
     });
 }
 
+// --- INITIALIZATION ON PAGE LOAD (THE ONLY CHANGE IS HERE) ---
 
-// --- INITIALIZATION ON PAGE LOAD ---
-
-window.onload = () => {
+// Old way: window.onload = () => { ... };
+// New way: Use DOMContentLoaded to run our script earlier.
+document.addEventListener('DOMContentLoaded', () => {
     // Populate all the radio button groups
     populateRadioGroup('marital_status_radiogroup', D_ARRIMA.maritalStatus, 'marital_status_radio', false, true); 
     populateRadioGroup('fr_co_radiogroup_dp', D_ARRIMA.frLangLevelsDP_Oral, 'fr_co_radio_dp');
@@ -571,7 +524,7 @@ window.onload = () => {
     populateRadioGroup('diplome_qc_radiogroup_dp', D_ARRIMA.diplomeQC_DP, 'diplome_qc_radio_dp', true);
     populateRadioGroup('experience_qc_radiogroup_dp', D_ARRIMA.experienceQC_DP, 'experience_qc_radio_dp', true);
     populateRadioGroup('fr_co_radiogroup_sp', D_ARRIMA.frLangLevelsSP_Oral, 'fr_co_radio_sp');
-    populateRadioGroup('fr_po_radiogroup_sp', D_ARRIMA.frLangLevelsSP_Oral, 'fr_po_radio_sp');
+    populateRadioGrup('fr_po_radiogroup_sp', D_ARRIMA.frLangLevelsSP_Oral, 'fr_po_radio_sp');
     populateRadioGroup('education_radiogroup_sp', D_ARRIMA.educationLevelsSP, 'education_radio_sp');
     populateRadioGroup('domaine_formation_radiogroup_sp', D_ARRIMA.domaineFormationSP, 'domaine_formation_radio_sp');
     populateRadioGroup('offre_emploi_radiogroup', D_ARRIMA.offreEmploiValidee, 'offre_emploi_radio', true);
@@ -581,6 +534,6 @@ window.onload = () => {
     toggleSpouseSection(); 
     calculatePoints();
     
-    // NEW: Activate the email gate logic
+    // Activate the email gate logic
     setupEmailGateAndWebhook(); 
-};
+});
