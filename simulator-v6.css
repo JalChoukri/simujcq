@@ -1,4 +1,4 @@
-/* --- Global Styles & Variables --- */
+text-align: center;/* --- Global Styles & Variables --- */
 :root {
     --primary-color: #3498db;
     --secondary-color: #2c3e50;
@@ -166,7 +166,8 @@ input[type="number"]:focus { outline: none; border-color: var(--primary-color); 
 }
 #email-gate-form-container h3 {
     margin-top: 0;
-    margin-bottom: 10px;
+    margin-bottom: 10px
+    text-align: center;
 }
 #email-gate-form-container p {
     font-size: 0.95em;
