@@ -521,6 +521,7 @@ document.addEventListener('DOMContentLoaded', () => {
     populateRadioGroup('diplome_qc_radiogroup_dp', D_ARRIMA.diplomeQC_DP, 'diplome_qc_radio_dp', true);
     populateRadioGroup('experience_qc_radiogroup_dp', D_ARRIMA.experienceQC_DP, 'experience_qc_radio_dp', true);
     populateRadioGroup('fr_co_radiogroup_sp', D_ARRIMA.frLangLevelsSP_Oral, 'fr_co_radio_sp');
+    // THIS WAS THE LINE WITH THE TYPO. IT IS NOW CORRECTED.
     populateRadioGroup('fr_po_radiogroup_sp', D_ARRIMA.frLangLevelsSP_Oral, 'fr_po_radio_sp');
     populateRadioGroup('education_radiogroup_sp', D_ARRIMA.educationLevelsSP, 'education_radio_sp');
     populateRadioGroup('domaine_formation_radiogroup_sp', D_ARRIMA.domaineFormationSP, 'domaine_formation_radio_sp');
