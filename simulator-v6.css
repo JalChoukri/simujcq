@@ -166,7 +166,7 @@ input[type="number"]:focus { outline: none; border-color: var(--primary-color); 
 }
 #email-gate-form-container h3 {
     margin-top: 0;
-    margin-bottom: 10px
+    margin-bottom: 10px;
     text-align: center;
 }
 #email-gate-form-container p {
