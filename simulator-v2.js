@@ -503,10 +503,7 @@ function generatePDF() {
     });
 }
 
-// --- INITIALIZATION ON PAGE LOAD (THE ONLY CHANGE IS HERE) ---
-
-// Old way: window.onload = () => { ... };
-// New way: Use DOMContentLoaded to run our script earlier.
+// --- INITIALIZATION ON PAGE LOAD ---
 document.addEventListener('DOMContentLoaded', () => {
     // Populate all the radio button groups
     populateRadioGroup('marital_status_radiogroup', D_ARRIMA.maritalStatus, 'marital_status_radio', false, true); 
@@ -524,7 +521,7 @@ document.addEventListener('DOMContentLoaded', () => {
     populateRadioGroup('diplome_qc_radiogroup_dp', D_ARRIMA.diplomeQC_DP, 'diplome_qc_radio_dp', true);
     populateRadioGroup('experience_qc_radiogroup_dp', D_ARRIMA.experienceQC_DP, 'experience_qc_radio_dp', true);
     populateRadioGroup('fr_co_radiogroup_sp', D_ARRIMA.frLangLevelsSP_Oral, 'fr_co_radio_sp');
-    populateRadioGrup('fr_po_radiogroup_sp', D_ARRIMA.frLangLevelsSP_Oral, 'fr_po_radio_sp');
+    populateRadioGroup('fr_po_radiogroup_sp', D_ARRIMA.frLangLevelsSP_Oral, 'fr_po_radio_sp');
     populateRadioGroup('education_radiogroup_sp', D_ARRIMA.educationLevelsSP, 'education_radio_sp');
     populateRadioGroup('domaine_formation_radiogroup_sp', D_ARRIMA.domaineFormationSP, 'domaine_formation_radio_sp');
     populateRadioGroup('offre_emploi_radiogroup', D_ARRIMA.offreEmploiValidee, 'offre_emploi_radio', true);
