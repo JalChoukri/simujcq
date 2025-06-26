@@ -27,6 +27,10 @@ let totalScore = 0
 let hasSpouse = false
 let showResults = false
 let financialAutonomyAccepted = false
+let mounted = false
+
+// Cached DOM Elements for performance
+const cachedElements = {}
 
 // DOM Elements
 const emailOverlay = document.getElementById("email-overlay")
@@ -34,20 +38,85 @@ const resultsContent = document.getElementById("results-content")
 const emailForm = document.getElementById("email-form")
 const spouseFields = document.getElementById("spouse-fields")
 const progressFill = document.getElementById("progress-fill")
-const progressPercentage = document.getElementById("progress-percentage")
 const progressMessage = document.getElementById("progress-message")
 const recommendations = document.getElementById("recommendations")
 const resetSection = document.getElementById("reset-section")
 const financialWarning = document.getElementById("financial-warning")
 
+// Performance optimizations
+const throttle = (func, limit) => {
+  let inThrottle
+  return function () {
+    const args = arguments
+    
+    if (!inThrottle) {
+      func.apply(this, args)
+      inThrottle = true
+      setTimeout(() => (inThrottle = false), limit)
+    }
+  }
+}
+
+const debounce = (func, wait) => {
+  let timeout
+  return function executedFunction(...args) {
+    const later = () => {
+      clearTimeout(timeout)
+      func(...args)
+    }
+    clearTimeout(timeout)
+    timeout = setTimeout(later, wait)
+  }
+}
+
+// Memoized calculations
+const memoizedCalculations = {
+  totalScore: null,
+  completionPercentage: null,
+  frenchTotal: null,
+  englishTotal: null,
+}
+
 // Initialize the calculator
 document.addEventListener("DOMContentLoaded", () => {
+  mounted = true
+  cacheElements()
   initializeEventListeners()
   updateProgress()
   updateScoreDisplay()
 })
 
-// Event Listeners
+// Cache DOM elements for better performance
+function cacheElements() {
+  const elements = [
+    "score-french-oral-comp",
+    "score-french-oral-prod",
+    "score-french-written-comp",
+    "score-french-written-prod",
+    "score-age",
+    "score-education",
+    "score-field",
+    "score-work",
+    "score-quebec-diploma",
+    "score-quebec-work",
+    "score-spouse-french",
+    "score-spouse-age",
+    "score-spouse-education",
+    "score-spouse-field",
+    "score-job-offer",
+    "score-children",
+    "score-family",
+    "score-french-total",
+    "score-english-total",
+    "total-score",
+  ]
+
+  elements.forEach((id) => {
+    cachedElements[id] = document.getElementById(id)
+  })
+}
+
+// Event Listeners with performance optimizations
 function initializeEventListeners() {
   // Navigation buttons
   document.querySelectorAll(".nav-btn").forEach((btn) => {
@@ -58,13 +127,16 @@ function initializeEventListeners() {
     })
   })
 
-  // Score selects
+  // Score selects with debounced updates
   document.querySelectorAll(".form-select[data-score]").forEach((select) => {
-    select.addEventListener("change", function () {
-      const scoreKey = this.dataset.score
-      const value = Number.parseInt(this.value) || 0
-      updateScore(scoreKey, value)
-    })
+    select.addEventListener(
+      "change",
+      debounce(function () {
+        const scoreKey = this.dataset.score
+        const value = Number.parseInt(this.value) || 0
+        updateScore(scoreKey, value)
+      }, 100),
+    )
   })
 
   // Spouse radio buttons
@@ -90,138 +162,193 @@ function initializeEventListeners() {
   })
 
   // Financial autonomy checkbox
-  document.getElementById("financial-autonomy-checkbox").addEventListener("change", function () {
-    financialAutonomyAccepted = this.checked
-    updateProgress()
-  })
+  const financialCheckbox = document.getElementById("financial-autonomy-checkbox")
+  if (financialCheckbox) {
+    financialCheckbox.addEventListener("change", function () {
+      financialAutonomyAccepted = this.checked
+      updateProgress()
+    })
+  }
 
   // Email form
-  emailForm.addEventListener("submit", (e) => {
-    e.preventDefault()
-    const email = document.getElementById("email-input").value
-    const privacy = document.getElementById("privacy-checkbox").checked
+  if (emailForm) {
+    emailForm.addEventListener("submit", (e) => {
+      e.preventDefault()
+      const email = document.getElementById("email-input").value
+      const privacy = document.getElementById("privacy-checkbox").checked
 
-    if (email && privacy) {
-      showResults = true
-      emailOverlay.style.display = "none"
-      resultsContent.classList.add("show")
-      recommendations.style.display = "block"
-      resetSection.style.display = "block"
-      generateRecommendations()
-    }
-  })
+      if (email && privacy) {
+        showResults = true
+        if (emailOverlay) emailOverlay.style.display = "none"
+        if (resultsContent) resultsContent.classList.add("show")
+        if (recommendations) recommendations.style.display = "block"
+        if (resetSection) resetSection.style.display = "block"
+        generateRecommendations()
+      }
+    })
+  }
 
   // Reset button
-  document.getElementById("reset-btn").addEventListener("click", resetCalculator)
+  const resetBtn = document.getElementById("reset-btn")
+  if (resetBtn) {
+    resetBtn.addEventListener("click", resetCalculator)
+  }
 
-  // Scroll spy
-  window.addEventListener("scroll", handleScroll)
+  // Throttled scroll spy
+  if (mounted) {
+    window.addEventListener("scroll", throttle(handleScroll, 100), { passive: true })
+  }
 }
 
-// Score management
+// Score management with memoization
 function updateScore(key, value) {
   scores[key] = value
+  // Clear memoized calculations
+  memoizedCalculations.totalScore = null
+  memoizedCalculations.completionPercentage = null
+  memoizedCalculations.frenchTotal = null
+  memoizedCalculations.englishTotal = null
+
   calculateTotal()
   updateScoreDisplay()
   updateProgress()
 }
 
 function calculateTotal() {
-  totalScore = Object.values(scores).reduce((sum, score) => sum + score, 0)
+  if (memoizedCalculations.totalScore === null) {
+    memoizedCalculations.totalScore = Object.values(scores).reduce((sum, score) => sum + score, 0)
+  }
+  totalScore = memoizedCalculations.totalScore
 }
 
-// UI Updates
+// UI Updates with performance optimizations
 function updateScoreDisplay() {
-  // Individual scores
-  document.getElementById("score-french-oral-comp").textContent = `${scores.frenchOralComprehension} pts`
-  document.getElementById("score-french-oral-prod").textContent = `${scores.frenchOralProduction} pts`
-  document.getElementById("score-french-written-comp").textContent = `${scores.frenchWrittenComprehension} pts`
-  document.getElementById("score-french-written-prod").textContent = `${scores.frenchWrittenProduction} pts`
+  // Use requestAnimationFrame for smooth updates
+  requestAnimationFrame(() => {
+    // Individual scores with cached elements
+    const scoreUpdates = {
+      "score-french-oral-comp": scores.frenchOralComprehension,
+      "score-french-oral-prod": scores.frenchOralProduction,
+      "score-french-written-comp": scores.frenchWrittenComprehension,
+      "score-french-written-prod": scores.frenchWrittenProduction,
+      "score-age": scores.age,
+      "score-education": scores.education,
+      "score-field": scores.fieldOfStudy,
+      "score-work": scores.workExperience,
+      "score-quebec-diploma": scores.quebecDiploma,
+      "score-quebec-work": scores.quebecWorkExperience,
+      "score-spouse-french": scores.spouseFrenchOral,
+      "score-spouse-age": scores.spouseAge,
+      "score-spouse-education": scores.spouseEducation,
+      "score-spouse-field": scores.spouseFieldOfStudy,
+      "score-job-offer": scores.jobOffer,
+      "score-children": scores.children,
+      "score-family": scores.familyInQuebec,
+    }
 
-  // French total
-  const frenchTotal =
-    scores.frenchOralComprehension +
-    scores.frenchOralProduction +
-    scores.frenchWrittenComprehension +
-    scores.frenchWrittenProduction
-  document.getElementById("score-french-total").textContent = `${frenchTotal} pts`
+    Object.entries(scoreUpdates).forEach(([id, value]) => {
+      const element = cachedElements[id]
+      if (element) {
+        element.textContent = `${value} pts`
+      }
+    })
 
-  // English total
-  const englishTotal =
-    scores.englishOralComprehension +
-    scores.englishOralProduction +
-    scores.englishWrittenComprehension +
-    scores.englishWrittenProduction
-  document.getElementById("score-english-total").textContent = `${englishTotal} pts`
+    // French total with memoization
+    if (memoizedCalculations.frenchTotal === null) {
+      memoizedCalculations.frenchTotal =
+        scores.frenchOralComprehension +
+        scores.frenchOralProduction +
+        scores.frenchWrittenComprehension +
+        scores.frenchWrittenProduction
+    }
 
-  // Other scores
-  document.getElementById("score-age").textContent = `${scores.age} pts`
-  document.getElementById("score-education").textContent = `${scores.education} pts`
-  document.getElementById("score-field").textContent = `${scores.fieldOfStudy} pts`
-  document.getElementById("score-work").textContent = `${scores.workExperience} pts`
-  document.getElementById("score-quebec-diploma").textContent = `${scores.quebecDiploma} pts`
-  document.getElementById("score-quebec-work").textContent = `${scores.quebecWorkExperience} pts`
-  document.getElementById("score-spouse-french").textContent = `${scores.spouseFrenchOral} pts`
-  document.getElementById("score-spouse-age").textContent = `${scores.spouseAge} pts`
-  document.getElementById("score-spouse-education").textContent = `${scores.spouseEducation} pts`
-  document.getElementById("score-spouse-field").textContent = `${scores.spouseFieldOfStudy} pts`
-  document.getElementById("score-job-offer").textContent = `${scores.jobOffer} pts`
-  document.getElementById("score-children").textContent = `${scores.children} pts`
-  document.getElementById("score-family").textContent = `${scores.familyInQuebec} pts`
+    const frenchTotalElement = cachedElements["score-french-total"]
+    if (frenchTotalElement) {
+      frenchTotalElement.textContent = `${memoizedCalculations.frenchTotal} pts`
+    }
 
-  // Total score with dynamic color
-  const totalScoreElement = document.getElementById("total-score")
-  totalScoreElement.textContent = `${totalScore} points`
+    // English total with memoization
+    if (memoizedCalculations.englishTotal === null) {
+      memoizedCalculations.englishTotal =
+        scores.englishOralComprehension +
+        scores.englishOralProduction +
+        scores.englishWrittenComprehension +
+        scores.englishWrittenProduction
+    }
 
-  // Update total score color based on progress
-  const completionPercentage = calculateCompletionPercentage()
-  totalScoreElement.className = "total-score-text"
+    const englishTotalElement = cachedElements["score-english-total"]
+    if (englishTotalElement) {
+      englishTotalElement.textContent = `${memoizedCalculations.englishTotal} pts`
+    }
 
-  if (completionPercentage < 30) {
-    totalScoreElement.classList.add("red")
-  } else if (completionPercentage < 70) {
-    totalScoreElement.classList.add("yellow")
-  } else {
-    totalScoreElement.classList.add("green")
-  }
+    // Total score with dynamic color
+    const totalScoreElement = cachedElements["total-score"]
+    if (totalScoreElement) {
+      totalScoreElement.textContent = `${totalScore} points`
+
+      // Update total score color based on progress
+      const completionPercentage = calculateCompletionPercentage()
+      totalScoreElement.className = "total-score-text"
+
+      if (completionPercentage < 30) {
+        totalScoreElement.classList.add("red")
+      } else if (completionPercentage < 70) {
+        totalScoreElement.classList.add("yellow")
+      } else {
+        totalScoreElement.classList.add("green")
+      }
+    }
+  })
 }
 
 function calculateCompletionPercentage() {
-  const totalFields = Object.keys(scores).length + 1 // +1 for financial autonomy
-  const completedFields =
-    Object.values(scores).filter((score) => score > 0).length + (financialAutonomyAccepted ? 1 : 0)
-  return (completedFields / totalFields) * 100
+  if (memoizedCalculations.completionPercentage === null) {
+    const totalFields = Object.keys(scores).length + 1 // +1 for financial autonomy
+    const completedFields =
+      Object.values(scores).filter((score) => score > 0).length + (financialAutonomyAccepted ? 1 : 0)
+    memoizedCalculations.completionPercentage = (completedFields / totalFields) * 100
+  }
+  return memoizedCalculations.completionPercentage
 }
 
 function updateProgress() {
   const percentage = Math.round(calculateCompletionPercentage())
 
-  progressFill.style.width = `${percentage}%`
-  progressPercentage.textContent = `${percentage}% terminé`
+  if (progressFill) {
+    // Use transform instead of width for better performance
+    progressFill.style.transform = `scaleX(${percentage / 100})`
+    progressFill.style.transformOrigin = "left"
+  }
 
   // Update progress color and message
-  if (percentage < 30) {
-    progressFill.className = "progress-fill"
-    progressMessage.textContent = "Continuez - Informations insuffisantes"
-  } else if (percentage < 70) {
-    progressFill.className = "progress-fill yellow"
-    progressMessage.textContent = "Bon progrès - Ça s'améliore"
-  } else {
-    progressFill.className = "progress-fill green"
-    progressMessage.textContent = "Excellent - Presque terminé!"
+  if (progressFill && progressMessage) {
+    if (percentage < 30) {
+      progressFill.className = "progress-fill"
+      progressMessage.textContent = "Continuez - Informations insuffisantes"
+    } else if (percentage < 70) {
+      progressFill.className = "progress-fill yellow"
+      progressMessage.textContent = "Bon progrès - Ça s'améliore"
+    } else {
+      progressFill.className = "progress-fill green"
+      progressMessage.textContent = "Excellent - Presque terminé!"
+    }
   }
 }
 
 function toggleSpouseFields() {
-  if (hasSpouse) {
-    spouseFields.style.display = "block"
-  } else {
-    spouseFields.style.display = "none"
+  if (spouseFields) {
+    if (hasSpouse) {
+      spouseFields.style.display = "block"
+    } else {
+      spouseFields.style.display = "none"
+    }
   }
 }
 
-// Navigation
+// Navigation with performance optimizations
 function scrollToSection(sectionId) {
+  if (!mounted) return
+
   const section = document.getElementById(`${sectionId}-section`)
   if (section) {
     section.scrollIntoView({ behavior: "smooth", block: "start" })
@@ -238,6 +365,8 @@ function updateActiveNavButton(activeSection) {
 }
 
 function handleScroll() {
+  if (!mounted) return
+
   const sections = [
     { id: "french", element: document.getElementById("french-section") },
     { id: "english", element: document.getElementById("english-section") },
@@ -260,14 +389,15 @@ function handleScroll() {
   }
 }
 
-// Recommendations
+// Recommendations with memoization
 function generateRecommendations() {
   const baseScore = totalScore - scores.jobOffer
   const frenchTotal =
+    memoizedCalculations.frenchTotal ||
     scores.frenchOralComprehension +
-    scores.frenchOralProduction +
-    scores.frenchWrittenComprehension +
-    scores.frenchWrittenProduction
+      scores.frenchOralProduction +
+      scores.frenchWrittenComprehension +
+      scores.frenchWrittenProduction
 
   // Generate score interpretation
   let scoreInterpretation = ""
@@ -301,17 +431,24 @@ function generateRecommendations() {
   }
 
   // Update score interpretation
-  document.getElementById("score-interpretation").innerHTML = `<p>${scoreInterpretation}</p>`
+  const scoreInterpretationElement = document.getElementById("score-interpretation")
+  if (scoreInterpretationElement) {
+    scoreInterpretationElement.innerHTML = `<p>${scoreInterpretation}</p>`
+  }
 
   // Show/hide financial autonomy warning
-  if (!financialAutonomyAccepted) {
-    financialWarning.style.display = "block"
-  } else {
-    financialWarning.style.display = "none"
+  if (financialWarning) {
+    if (!financialAutonomyAccepted) {
+      financialWarning.style.display = "block"
+    } else {
+      financialWarning.style.display = "none"
+    }
   }
 
   // Generate specific recommendations
   const recommendationsList = document.getElementById("recommendations-list")
+  if (!recommendationsList) return
+
   const recommendationsArray = []
 
   if (frenchTotal < 200) {
@@ -373,7 +510,7 @@ function generateRecommendations() {
     })
   }
 
-  // Render recommendations
+  // Render recommendations with performance optimization
   if (recommendationsArray.length > 0) {
     let recommendationsHTML = '<h4>Recommandations pour améliorer votre profil :</h4><div class="recommendations-grid">'
 
@@ -420,6 +557,11 @@ function resetCalculator() {
     scores[key] = 0
   })
 
+  // Clear memoized calculations
+  Object.keys(memoizedCalculations).forEach((key) => {
+    memoizedCalculations[key] = null
+  })
+
   // Reset form fields
   document.querySelectorAll(".form-select").forEach((select) => {
     select.value = ""
@@ -431,7 +573,10 @@ function resetCalculator() {
   })
 
   // Reset checkboxes
-  document.getElementById("financial-autonomy-checkbox").checked = false
+  const financialCheckbox = document.getElementById("financial-autonomy-checkbox")
+  if (financialCheckbox) {
+    financialCheckbox.checked = false
+  }
   financialAutonomyAccepted = false
 
   // Reset spouse fields
@@ -439,15 +584,17 @@ function resetCalculator() {
   toggleSpouseFields()
 
   // Reset email form
-  document.getElementById("email-input").value = ""
-  document.getElementById("privacy-checkbox").checked = false
+  const emailInput = document.getElementById("email-input")
+  const privacyCheckbox = document.getElementById("privacy-checkbox")
+  if (emailInput) emailInput.value = ""
+  if (privacyCheckbox) privacyCheckbox.checked = false
 
   // Reset UI state
   showResults = false
-  emailOverlay.style.display = "flex"
-  resultsContent.classList.remove("show")
-  recommendations.style.display = "none"
-  resetSection.style.display = "none"
+  if (emailOverlay) emailOverlay.style.display = "flex"
+  if (resultsContent) resultsContent.classList.remove("show")
+  if (recommendations) recommendations.style.display = "none"
+  if (resetSection) resetSection.style.display = "none"
 
   // Update displays
   calculateTotal()
@@ -455,26 +602,17 @@ function resetCalculator() {
   updateProgress()
 
   // Scroll to top
-  window.scrollTo({ top: 0, behavior: "smooth" })
-}
-
-// Utility functions
-function debounce(func, wait) {
-  let timeout
-  return function executedFunction(...args) {
-    const later = () => {
-      clearTimeout(timeout)
-      func(...args)
-    }
-    clearTimeout(timeout)
-    timeout = setTimeout(later, wait)
+  if (mounted) {
+    window.scrollTo({ top: 0, behavior: "smooth" })
   }
 }
 
 // Export for potential external use
-window.ArrimaCalculator = {
-  getScores: () => scores,
-  getTotalScore: () => totalScore,
-  reset: resetCalculator,
-  updateScore: updateScore,
+if (typeof window !== "undefined") {
+  window.ArrimaCalculator = {
+    getScores: () => scores,
+    getTotalScore: () => totalScore,
+    reset: resetCalculator,
+    updateScore: updateScore,
+  }
 }
