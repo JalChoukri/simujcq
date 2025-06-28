@@ -1,446 +1,697 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simulateur Arrima Gratuit 2025 - J'arrive Québec</title>
-    <link rel="stylesheet" href="arrima-calculator.css">
-    <link rel="stylesheet" href="arrima-calculator-mobile.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-    </script>
-</head>
-<body>
-    <!-- Fixed Navigation -->
-    <div class="fixed-nav">
-        <div class="nav-container">
-            <div class="nav-content">
-                <!-- Mobile Navigation -->
-                <div class="mobile-nav">
-                    <div class="nav-title-mobile">
-                        <svg class="nav-icon" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M12 2L2 7v10c0 5.55 3.84 10 9 11 1.09-.21 2.09-.64 3-1.22.91.58 1.91 1.01 3 1.22 5.16-1 9-5.45 9-11V7l-10-5z"/>
-                        </svg>
-                        <span>Simulateur Arrima 2025</span>
-                    </div>
-                    <div class="nav-buttons-mobile">
-                        <button class="nav-btn-mobile active" data-step="0">
-                            <svg viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
-                            </svg>
-                            <span>Profil</span>
-                        </button>
-                        <button class="nav-btn-mobile" data-step="1">
-                            <span class="flag">🇫🇷</span>
-                            <span>Français</span>
-                        </button>
-                        <button class="nav-btn-mobile" data-step="2">
-                            <span class="flag">🇬🇧</span>
-                            <span>Anglais</span>
-                        </button>
-                        <button class="nav-btn-mobile" data-step="3">
-                            <svg viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-                            </svg>
-                            <span>Québec</span>
-                        </button>
-                        <button class="nav-btn-mobile" data-step="4">
-                            <svg viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
-                            </svg>
-                            <span>Autres</span>
-                        </button>
-                        <button class="nav-btn-mobile" data-step="5">
-                            <svg viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/>
-                            </svg>
-                            <span>Résultats</span>
-                        </button>
+// Arrima Calculator JavaScript
+class ArrimaCalculator {
+  constructor() {
+    this.currentStep = 0
+    this.scores = {
+      frenchOralComprehension: 0,
+      frenchOralProduction: 0,
+      frenchWrittenComprehension: 0,
+      frenchWrittenProduction: 0,
+      englishOralComprehension: 0,
+      englishOralProduction: 0,
+      englishWrittenComprehension: 0,
+      englishWrittenProduction: 0,
+      age: 0,
+      education: 0,
+      fieldOfStudy: 0,
+      workExperience: 0,
+      quebecDiploma: 0,
+      quebecWorkExperience: 0,
+      spouseFrenchOral: 0,
+      spouseAge: 0,
+      spouseEducation: 0,
+      spouseFieldOfStudy: 0,
+      jobOffer: 0,
+      children: 0,
+      familyInQuebec: 0,
+    }
+    this.hasSpouse = false
+    this.showResults = false
+    this.financialAutonomyAccepted = false
+    this.totalScore = 0
+    this.isMobile = window.innerWidth < 768
+
+    this.init()
+  }
+
+  init() {
+    this.bindEvents()
+    this.updateUI()
+    this.checkMobile()
+
+    // Initialize GTM data layer
+    if (typeof window.dataLayer === "undefined") {
+      window.dataLayer = []
+    }
+
+    window.dataLayer.push({
+      event: "calculator_loaded",
+      calculator_type: "arrima",
+      page_title: "Simulateur Arrima 2025",
+    })
+  }
+
+  bindEvents() {
+    // Navigation buttons
+    document.querySelectorAll(".nav-btn-mobile, .nav-btn-desktop").forEach((btn) => {
+      btn.addEventListener("click", (e) => {
+        const step = Number.parseInt(e.currentTarget.dataset.step)
+        this.goToStep(step)
+      })
+    })
+
+    // Previous/Next buttons
+    document.getElementById("prev-btn").addEventListener("click", () => {
+      this.goToStep(Math.max(0, this.currentStep - 1))
+    })
+
+    document.getElementById("next-btn").addEventListener("click", () => {
+      if (this.currentStep === 4) {
+        this.goToStep(5)
+      } else {
+        this.goToStep(Math.min(5, this.currentStep + 1))
+      }
+    })
+
+    // Age input
+    document.getElementById("age-input").addEventListener("input", (e) => {
+      const age = Number.parseInt(e.target.value) || 0
+      this.calculateAgeScore(age)
+    })
+
+    // Spouse toggle
+    document.querySelectorAll('[data-field="hasSpouse"]').forEach((btn) => {
+      btn.addEventListener("click", (e) => {
+        const value = e.currentTarget.dataset.value === "true"
+        this.hasSpouse = value
+        this.updateSpouseSection()
+        this.updateOptionButtons(e.currentTarget.parentElement, e.currentTarget)
+      })
+    })
+
+    // Email form
+    document.getElementById("email-gate-form").addEventListener("submit", (e) => {
+      e.preventDefault()
+      this.showResults = true
+      this.updateResultsDisplay()
+
+      // GTM tracking
+      window.dataLayer.push({
+        event: "email_submitted",
+        email_source: "arrima_calculator",
+        total_score: this.totalScore,
+        has_spouse: this.hasSpouse,
+      })
+    })
+
+    // Reset button
+    document.getElementById("reset-btn").addEventListener("click", () => {
+      this.resetCalculator()
+    })
+
+    // Download button
+    document.getElementById("download-btn").addEventListener("click", () => {
+      this.downloadResults()
+    })
+
+    // Window resize
+    window.addEventListener("resize", () => {
+      this.checkMobile()
+    })
+  }
+
+  checkMobile() {
+    this.isMobile = window.innerWidth < 768
+  }
+
+  goToStep(step) {
+    if (step >= 0 && step < 6) {
+      this.currentStep = step
+      this.updateUI()
+      this.scrollToTop()
+
+      if (step === 5) {
+        setTimeout(() => {
+          this.scrollToResults()
+        }, 100)
+      }
+
+      // GTM tracking
+      window.dataLayer.push({
+        event: "step_navigation",
+        step_number: step + 1,
+        step_name: this.getStepName(step),
+      })
+    }
+  }
+
+  getStepName(step) {
+    const names = ["Profil", "Français", "Anglais", "Québec", "Autres", "Résultats"]
+    return names[step] || "Unknown"
+  }
+
+  scrollToTop() {
+    window.scrollTo({ top: 0, behavior: "smooth" })
+  }
+
+  scrollToResults() {
+    const resultsContainer = document.getElementById("results-container")
+    if (resultsContainer) {
+      if (this.isMobile) {
+        const elementPosition = resultsContainer.offsetTop
+        const offsetPosition = elementPosition - 180
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: "smooth",
+        })
+      } else {
+        resultsContainer.scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+        })
+      }
+    }
+  }
+
+  scrollToProfil() {
+    const profilSection = document.getElementById("step-0")
+    if (profilSection) {
+      if (this.isMobile) {
+        const elementPosition = profilSection.offsetTop
+        const offsetPosition = elementPosition - 240 // Account for mobile nav height
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: "smooth",
+        })
+      } else {
+        profilSection.scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+        })
+      }
+    }
+  }
+
+  calculateAgeScore(age) {
+    let ageScore = 0
+
+    if (age < 18) ageScore = 0
+    else if (age <= 30) ageScore = 130
+    else if (age === 31) ageScore = 124
+    else if (age === 32) ageScore = 118
+    else if (age === 33) ageScore = 112
+    else if (age === 34) ageScore = 106
+    else if (age === 35) ageScore = 100
+    else if (age === 36) ageScore = 88
+    else if (age === 37) ageScore = 76
+    else if (age === 38) ageScore = 64
+    else if (age === 39) ageScore = 52
+    else if (age === 40) ageScore = 40
+    else if (age === 41) ageScore = 26
+    else if (age === 42) ageScore = 13
+    else ageScore = 0
+
+    this.scores.age = ageScore
+    this.updateTotalScore()
+  }
+
+  updateSpouseSection() {
+    const spouseSection = document.getElementById("spouse-section")
+    if (spouseSection) {
+      spouseSection.style.display = this.hasSpouse ? "block" : "none"
+    }
+  }
+
+  updateOptionButtons(container, activeButton) {
+    container.querySelectorAll(".option-btn").forEach((btn) => {
+      btn.classList.remove("active")
+    })
+    activeButton.classList.add("active")
+  }
+
+  updateTotalScore() {
+    this.totalScore = Object.values(this.scores).reduce((sum, score) => sum + score, 0)
+    this.updateProgressBar()
+    this.updateHiddenFields()
+  }
+
+  updateHiddenFields() {
+    // Update hidden form fields for data capture
+    const totalField = document.getElementById("arrima_score_total")
+    const languageField = document.getElementById("arrima_score_language")
+    const jobOfferField = document.getElementById("job_offer_status")
+
+    if (totalField) totalField.value = this.totalScore
+    if (languageField) {
+      const languageScore =
+        this.scores.frenchOralComprehension +
+        this.scores.frenchOralProduction +
+        this.scores.frenchWrittenComprehension +
+        this.scores.frenchWrittenProduction +
+        this.scores.englishOralComprehension +
+        this.scores.englishOralProduction +
+        this.scores.englishWrittenComprehension +
+        this.scores.englishWrittenProduction
+      languageField.value = languageScore
+    }
+    if (jobOfferField) jobOfferField.value = this.scores.jobOffer > 0 ? "Yes" : "No"
+  }
+
+  updateProgressBar() {
+    const progressFill = document.getElementById("progress-fill")
+    const progressScore = document.getElementById("progress-score")
+    const progressMessage = document.getElementById("progress-message")
+
+    if (progressFill && progressScore && progressMessage) {
+      const percentage = Math.min((this.totalScore / 1346) * 100, 100)
+      progressFill.style.width = `${percentage}%`
+      progressScore.textContent = `${this.totalScore} points`
+
+      // Update colors and messages based on score
+      progressFill.className = "progress-fill"
+      progressMessage.className = "progress-message"
+
+      if (this.totalScore < 50) {
+        progressFill.classList.add("red")
+        progressMessage.classList.add("red")
+        progressMessage.textContent = "Score insuffisant pour soumettre un profil Arrima"
+      } else if (this.totalScore < 300) {
+        progressFill.classList.add("red")
+        progressMessage.classList.add("red")
+        progressMessage.textContent = "Score minimal atteint, mais des améliorations sont nécessaires"
+      } else if (this.totalScore < 600) {
+        progressFill.classList.add("yellow")
+        progressMessage.classList.add("yellow")
+        progressMessage.textContent = "Bon score ! Vous êtes sur la bonne voie"
+      } else {
+        progressFill.classList.add("green")
+        progressMessage.classList.add("green")
+        progressMessage.textContent = "Excellent score ! Profil très compétitif"
+      }
+    }
+  }
+
+  updateUI() {
+    // Update step panels
+    document.querySelectorAll(".step-panel").forEach((panel, index) => {
+      panel.classList.toggle("active", index === this.currentStep)
+    })
+
+    // Update navigation buttons
+    document.querySelectorAll(".nav-btn-mobile, .nav-btn-desktop").forEach((btn, index) => {
+      btn.classList.toggle("active", index === this.currentStep)
+    })
+
+    // Update navigation controls
+    const prevBtn = document.getElementById("prev-btn")
+    const nextBtn = document.getElementById("next-btn")
+    const stepIndicator = document.getElementById("step-indicator")
+
+    if (prevBtn) prevBtn.disabled = this.currentStep === 0
+    if (nextBtn) {
+      nextBtn.disabled = this.currentStep === 5
+      nextBtn.textContent = this.currentStep === 4 ? "Voir les résultats" : "Suivant"
+
+      // Update next button icon
+      const nextIcon = nextBtn.querySelector("svg")
+      if (nextIcon && this.currentStep !== 4) {
+        nextBtn.appendChild(nextIcon)
+      }
+    }
+    if (stepIndicator) stepIndicator.textContent = `${this.currentStep + 1} / 6`
+
+    // Update results display
+    if (this.currentStep === 5) {
+      this.updateResultsDisplay()
+    }
+  }
+
+  updateResultsDisplay() {
+    const emailContainer = document.getElementById("email-form-container")
+    const resultsContent = document.getElementById("results-content")
+
+    if (emailContainer && resultsContent) {
+      emailContainer.style.display = this.showResults ? "none" : "block"
+      resultsContent.style.display = this.showResults ? "block" : "none"
+
+      if (this.showResults) {
+        this.updateScoreDisplay()
+        this.updateRecommendations()
+      }
+    }
+  }
+
+  updateScoreDisplay() {
+    // Calculate totals
+    const frenchTotal =
+      this.scores.frenchOralComprehension +
+      this.scores.frenchOralProduction +
+      this.scores.frenchWrittenComprehension +
+      this.scores.frenchWrittenProduction
+    const englishTotal =
+      this.scores.englishOralComprehension +
+      this.scores.englishOralProduction +
+      this.scores.englishWrittenComprehension +
+      this.scores.englishWrittenProduction
+
+    // Update individual scores
+    this.updateScoreElement("score-french-oral-comp", this.scores.frenchOralComprehension)
+    this.updateScoreElement("score-french-oral-prod", this.scores.frenchOralProduction)
+    this.updateScoreElement("score-french-written-comp", this.scores.frenchWrittenComprehension)
+    this.updateScoreElement("score-french-written-prod", this.scores.frenchWrittenProduction)
+    this.updateScoreElement("score-french-total", frenchTotal)
+    this.updateScoreElement("score-english-total", englishTotal)
+    this.updateScoreElement("score-age", this.scores.age)
+    this.updateScoreElement("score-education", this.scores.education)
+    this.updateScoreElement("score-field", this.scores.fieldOfStudy)
+    this.updateScoreElement("score-work", this.scores.workExperience)
+    this.updateScoreElement("score-quebec-diploma", this.scores.quebecDiploma)
+    this.updateScoreElement("score-quebec-work", this.scores.quebecWorkExperience)
+    this.updateScoreElement("score-spouse-french", this.scores.spouseFrenchOral)
+    this.updateScoreElement("score-spouse-age", this.scores.spouseAge)
+    this.updateScoreElement("score-spouse-education", this.scores.spouseEducation)
+    this.updateScoreElement("score-spouse-field", this.scores.spouseFieldOfStudy)
+    this.updateScoreElement("score-job-offer", this.scores.jobOffer)
+    this.updateScoreElement("score-children", this.scores.children)
+    this.updateScoreElement("score-family", this.scores.familyInQuebec)
+
+    // Update total score
+    const totalScoreElement = document.getElementById("total-score")
+    if (totalScoreElement) {
+      totalScoreElement.textContent = `${this.totalScore} points`
+      totalScoreElement.className = "total-score-text"
+
+      if (this.totalScore < 300) {
+        totalScoreElement.classList.add("red")
+      } else if (this.totalScore < 600) {
+        totalScoreElement.classList.add("yellow")
+      } else {
+        totalScoreElement.classList.add("green")
+      }
+    }
+  }
+
+  updateScoreElement(elementId, score) {
+    const element = document.getElementById(elementId)
+    if (element) {
+      element.textContent = `${score} pts`
+    }
+  }
+
+  updateRecommendations() {
+    const recommendationsSection = document.getElementById("recommendations")
+    const scoreInterpretation = document.getElementById("score-interpretation")
+    const recommendationsList = document.getElementById("recommendations-list")
+
+    if (recommendationsSection && scoreInterpretation && recommendationsList) {
+      recommendationsSection.style.display = "block"
+
+      // Score interpretation
+      let interpretation = ""
+      if (this.totalScore < 50) {
+        interpretation =
+          "Votre score actuel ne permet pas de soumettre un profil dans le système Arrima. Il faut un minimum de 50 points pour être éligible."
+      } else if (this.totalScore < 300) {
+        interpretation =
+          "Votre score permet de soumettre un profil, mais il est encore faible. Les chances d'invitation sont limitées avec ce score."
+      } else if (this.totalScore < 600) {
+        interpretation =
+          "Votre score est dans la moyenne. Avec quelques améliorations, vous pourriez augmenter vos chances d'être invité."
+      } else {
+        interpretation = "Excellent score ! Vous avez un profil très compétitif pour l'immigration au Québec."
+      }
+
+      scoreInterpretation.innerHTML = `<p>${interpretation}</p>`
+
+      // Generate recommendations
+      const recommendations = this.generateRecommendations()
+      recommendationsList.innerHTML = recommendations
+        .map(
+          (rec) => `
+                <div class="recommendation-item">
+                    <svg class="recommendation-icon" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                    </svg>
+                    <div class="recommendation-content">
+                        <h4>${rec.title}</h4>
+                        <p>${rec.description}</p>
                     </div>
                 </div>
+            `,
+        )
+        .join("")
+    }
+  }
 
-                <!-- Desktop Navigation -->
-                <div class="desktop-nav">
-                    <div class="nav-title-desktop">
-                        <svg class="nav-icon" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M12 2L2 7v10c0 5.55 3.84 10 9 11 1.09-.21 2.09-.64 3-1.22.91.58 1.91 1.01 3 1.22 5.16-1 9-5.45 9-11V7l-10-5z"/>
-                        </svg>
-                        <span>Simulateur Arrima 2025</span>
-                    </div>
-                    <div class="nav-buttons-desktop">
-                        <button class="nav-btn-desktop active" data-step="0">
-                            <svg viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
-                            </svg>
-                            <span>Profil</span>
-                        </button>
-                        <button class="nav-btn-desktop" data-step="1">
-                            <span class="flag">🇫🇷</span>
-                            <span>Français</span>
-                        </button>
-                        <button class="nav-btn-desktop" data-step="2">
-                            <span class="flag">🇬🇧</span>
-                            <span>Anglais</span>
-                        </button>
-                        <button class="nav-btn-desktop" data-step="3">
-                            <svg viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-                            </svg>
-                            <span>Québec</span>
-                        </button>
-                        <button class="nav-btn-desktop" data-step="4">
-                            <svg viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
-                            </svg>
-                            <span>Autres</span>
-                        </button>
-                        <button class="nav-btn-desktop" data-step="5">
-                            <svg viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/>
-                            </svg>
-                            <span>Résultats</span>
-                        </button>
-                    </div>
+  generateRecommendations() {
+    const recommendations = []
+
+    // French language recommendations
+    const frenchTotal =
+      this.scores.frenchOralComprehension +
+      this.scores.frenchOralProduction +
+      this.scores.frenchWrittenComprehension +
+      this.scores.frenchWrittenProduction
+    if (frenchTotal < 200) {
+      recommendations.push({
+        title: "Améliorer votre français",
+        description:
+          "Votre score en français peut être amélioré. Considérez prendre des cours ou passer un test de français reconnu.",
+      })
+    }
+
+    // Age recommendations
+    if (this.scores.age < 100) {
+      recommendations.push({
+        title: "Facteur âge",
+        description: "Les points pour l'âge diminuent avec le temps. Si possible, soumettez votre demande rapidement.",
+      })
+    }
+
+    // Education recommendations
+    if (this.scores.education < 100) {
+      recommendations.push({
+        title: "Niveau d'éducation",
+        description: "Considérez obtenir un diplôme d'études supérieures pour augmenter vos points.",
+      })
+    }
+
+    // Work experience recommendations
+    if (this.scores.workExperience < 50) {
+      recommendations.push({
+        title: "Expérience de travail",
+        description: "Accumulez plus d'expérience de travail dans votre domaine pour augmenter vos points.",
+      })
+    }
+
+    // Quebec factors
+    if (this.scores.quebecDiploma === 0 && this.scores.quebecWorkExperience === 0) {
+      recommendations.push({
+        title: "Expérience au Québec",
+        description: "Considérez étudier ou travailler au Québec pour obtenir des points additionnels importants.",
+      })
+    }
+
+    return recommendations.slice(0, 3) // Limit to top 3 recommendations
+  }
+
+  resetCalculator() {
+    if (confirm("Êtes-vous sûr de vouloir refaire le test ? Toutes vos données seront perdues.")) {
+      // Reset all scores
+      Object.keys(this.scores).forEach((key) => {
+        this.scores[key] = 0
+      })
+
+      // Reset state variables
+      this.currentStep = 0
+      this.hasSpouse = false
+      this.showResults = false
+      this.financialAutonomyAccepted = false
+      this.totalScore = 0
+
+      // Reset form inputs
+      document.getElementById("age-input").value = ""
+      document.getElementById("email-input-field").value = ""
+      document.getElementById("privacy-checkbox").checked = false
+
+      // Reset spouse buttons
+      document.querySelectorAll('[data-field="hasSpouse"]').forEach((btn) => {
+        btn.classList.toggle("active", btn.dataset.value === "false")
+      })
+
+      // Update UI
+      this.updateUI()
+      this.updateTotalScore()
+
+      // Go to Profil section and scroll to top
+      setTimeout(() => {
+        this.scrollToProfil()
+      }, 100)
+
+      // GTM tracking
+      window.dataLayer.push({
+        event: "calculator_reset",
+        reset_from_step: this.currentStep + 1,
+      })
+    }
+  }
+
+  downloadResults() {
+    try {
+      // Check if html2canvas is available
+      if (typeof window.html2canvas === "undefined") {
+        // Load html2canvas dynamically
+        const script = document.createElement("script")
+        script.src = "https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"
+        script.onload = () => this.downloadResultsWithCanvas()
+        document.head.appendChild(script)
+        return
+      }
+      this.downloadResultsWithCanvas()
+    } catch (error) {
+      console.error("Error downloading results:", error)
+      this.downloadResultsAsHTML()
+    }
+  }
+
+  downloadResultsWithCanvas() {
+    const resultsContainer = document.getElementById("results-container")
+    if (!resultsContainer) {
+      alert("Aucun résultat à télécharger.")
+      return
+    }
+
+    // Show loading state
+    const downloadBtn = document.getElementById("download-btn")
+    const originalText = downloadBtn.innerHTML
+    downloadBtn.innerHTML =
+      '<svg class="animate-spin w-4 h-4" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none" opacity="0.25"/><path fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"/></svg> Génération...'
+    downloadBtn.disabled = true
+
+    const options = {
+      backgroundColor: "#ffffff",
+      scale: 2,
+      useCORS: true,
+      allowTaint: true,
+      scrollX: 0,
+      scrollY: 0,
+      width: resultsContainer.scrollWidth,
+      height: resultsContainer.scrollHeight,
+    }
+
+    window
+      .html2canvas(resultsContainer, options)
+      .then((canvas) => {
+        const link = document.createElement("a")
+        link.download = `Resultats-Arrima-${new Date().toLocaleDateString("fr-CA")}.png`
+        link.href = canvas.toDataURL("image/png", 1.0)
+        document.body.appendChild(link)
+        link.click()
+        document.body.removeChild(link)
+
+        // GTM tracking
+        window.dataLayer.push({
+          event: "results_download",
+          download_type: "image",
+          score_total: this.totalScore,
+          has_spouse: this.hasSpouse,
+        })
+
+        // Reset button
+        downloadBtn.innerHTML = originalText
+        downloadBtn.disabled = false
+      })
+      .catch((error) => {
+        console.error("Canvas download failed:", error)
+        this.downloadResultsAsHTML()
+
+        // Reset button
+        downloadBtn.innerHTML = originalText
+        downloadBtn.disabled = false
+      })
+  }
+
+  downloadResultsAsHTML() {
+    const frenchTotal =
+      this.scores.frenchOralComprehension +
+      this.scores.frenchOralProduction +
+      this.scores.frenchWrittenComprehension +
+      this.scores.frenchWrittenProduction
+    const englishTotal =
+      this.scores.englishOralComprehension +
+      this.scores.englishOralProduction +
+      this.scores.englishWrittenComprehension +
+      this.scores.englishWrittenProduction
+
+    const htmlContent = `
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <meta charset="UTF-8">
+                <title>Résultats Simulateur Arrima - ${new Date().toLocaleDateString("fr-CA")}</title>
+                <style>
+                    body { font-family: Arial, sans-serif; margin: 20px; color: #333; }
+                    .header { text-align: center; margin-bottom: 30px; border-bottom: 2px solid #2563eb; padding-bottom: 20px; }
+                    .score-section { margin: 20px 0; padding: 15px; border: 1px solid #e5e7eb; border-radius: 8px; }
+                    .total-score { font-size: 24px; font-weight: bold; color: #2563eb; text-align: center; margin: 20px 0; }
+                    .score-item { display: flex; justify-content: space-between; margin: 8px 0; }
+                    .category-title { font-weight: bold; color: #1d4ed8; margin: 15px 0 10px 0; }
+                </style>
+            </head>
+            <body>
+                <div class="header">
+                    <h1>Simulateur Arrima Gratuit 2025</h1>
+                    <p>Par J'arrive Québec - www.jarrivequebec.com</p>
+                    <p>Résultats générés le ${new Date().toLocaleDateString("fr-CA")}</p>
                 </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Main Container -->
-    <div class="main-container">
-        <!-- Header -->
-        <div class="header">
-            <div class="header-content">
-                <h1 class="main-title">Simulateur Arrima Gratuit 2025</h1>
-                <p class="brand-subtitle">Par J'arrive Québec</p>
-            </div>
-            <p class="header-description">
-                Calculez votre score potentiel pour l'immigration au Québec. 
-                Complétez toutes les sections pour voir vos résultats.
-            </p>
-        </div>
-
-        <!-- Step Content -->
-        <div class="step-content">
-            <!-- Step 0: Profil -->
-            <div class="step-panel active" id="step-0">
-                <div class="card">
-                    <div class="card-header">
-                        <div class="card-title">
-                            <svg class="card-icon blue" viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
-                            </svg>
-                            Profil Personnel
-                        </div>
-                        <p class="card-description">
-                            Informations de base sur votre situation personnelle
-                        </p>
-                    </div>
-                    <div class="card-content">
-                        <div class="form-section">
-                            <div class="subsection-title">Âge</div>
-                            <div class="age-input-container">
-                                <input type="number" id="age-input" class="age-input" min="18" max="65" placeholder="Entrez votre âge">
-                                <p class="input-help">Votre âge au moment de la demande</p>
-                            </div>
-                        </div>
-
-                        <div class="form-section">
-                            <div class="subsection-title">Situation matrimoniale</div>
-                            <div class="option-grid">
-                                <button class="option-btn active" data-field="hasSpouse" data-value="false">
-                                    <span class="option-icon">👤</span>
-                                    <span>Célibataire</span>
-                                </button>
-                                <button class="option-btn" data-field="hasSpouse" data-value="true">
-                                    <span class="option-icon">👥</span>
-                                    <span>Marié(e) / Conjoint(e) de fait</span>
-                                </button>
-                            </div>
-                        </div>
-
-                        <!-- Spouse Section (hidden by default) -->
-                        <div id="spouse-section" class="spouse-section" style="display: none;">
-                            <h3 class="subsection-title">Informations sur votre conjoint(e)</h3>
-                            <p class="card-description">Ces informations nous aideront à calculer les points additionnels liés à votre conjoint(e).</p>
-                        </div>
-                    </div>
+                <div class="total-score">SCORE TOTAL: ${this.totalScore} points</div>
+                <div class="score-section">
+                    <div class="category-title">Compétences linguistiques</div>
+                    <div class="score-item"><span>Français total:</span><span>${frenchTotal} pts</span></div>
+                    <div class="score-item"><span>Anglais total:</span><span>${englishTotal} pts</span></div>
                 </div>
-            </div>
-
-            <!-- Step 5: Results -->
-            <div class="step-panel" id="step-5">
-                <div class="results-container" id="results-container">
-                    <div class="results-title">
-                        <h2>Vos Résultats</h2>
-                    </div>
-
-                    <!-- Email Form -->
-                    <div id="email-form-container" class="email-form-container">
-                        <div class="card email-card">
-                            <div class="card-content">
-                                <form id="email-gate-form" class="email-form" onclick="dataLayer.push({'event': 'form_submit'});">
-                                    <div class="form-group">
-                                        <label for="email-input-field" class="form-label">Adresse e-mail</label>
-                                        <input type="email" id="email-input-field" class="form-input" required placeholder="votre@email.com">
-                                    </div>
-                                    <div class="checkbox-group">
-                                        <input type="checkbox" id="privacy-checkbox" required>
-                                        <label for="privacy-checkbox" class="form-label">
-                                            J'accepte de recevoir des informations sur l'immigration au Québec et j'ai lu la 
-                                            <a href="https://jarrivequebec.com/politique-de-confidentialite" class="privacy-link" target="_blank">Politique de confidentialité</a>
-                                        </label>
-                                    </div>
-                                    <button type="submit" class="submit-btn">
-                                        <svg class="submit-icon" viewBox="0 0 24 24" fill="currentColor">
-                                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-                                        </svg>
-                                        Voir mes résultats
-                                    </button>
-                                    <!-- Hidden fields for data capture -->
-                                    <input type="hidden" id="arrima_score_total" name="arrima_score_total" value="0">
-                                    <input type="hidden" id="arrima_score_language" name="arrima_score_language" value="0">
-                                    <input type="hidden" id="job_offer_status" name="job_offer_status" value="No">
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Results Content -->
-                    <div id="results-content" class="results-content">
-                        <div class="results-header">
-                            <div class="results-header-left">
-                                <h3>Détail de votre score</h3>
-                            </div>
-                            <div class="results-header-right">
-                                <div class="brand-info">
-                                    <img src="public/images/jarrive-quebec-logo.png" alt="J'arrive Québec" class="brand-logo">
-                                    <span class="brand-name">J'arrive Québec</span>
-                                </div>
-                                <a href="https://jarrivequebec.com" class="brand-link" target="_blank">www.jarrivequebec.com</a>
-                            </div>
-                        </div>
-
-                        <!-- Results Grid -->
-                        <div class="results-grid">
-                            <div class="results-section">
-                                <h4 class="results-title blue">Compétences linguistiques</h4>
-                                <div class="score-items">
-                                    <div class="score-item">
-                                        <span>Compréhension orale français</span>
-                                        <span id="score-french-oral-comp" class="score-badge blue">0 pts</span>
-                                    </div>
-                                    <div class="score-item">
-                                        <span>Production orale français</span>
-                                        <span id="score-french-oral-prod" class="score-badge blue">0 pts</span>
-                                    </div>
-                                    <div class="score-item">
-                                        <span>Compréhension écrite français</span>
-                                        <span id="score-french-written-comp" class="score-badge blue">0 pts</span>
-                                    </div>
-                                    <div class="score-item">
-                                        <span>Production écrite français</span>
-                                        <span id="score-french-written-prod" class="score-badge blue">0 pts</span>
-                                    </div>
-                                    <div class="score-item subtotal">
-                                        <span>Sous-total français</span>
-                                        <span id="score-french-total" class="score-badge blue">0 pts</span>
-                                    </div>
-                                    <div class="score-separator"></div>
-                                    <div class="score-item">
-                                        <span>Anglais (toutes compétences)</span>
-                                        <span id="score-english-total" class="score-badge">0 pts</span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="results-section">
-                                <h4 class="results-title purple">Capital humain</h4>
-                                <div class="score-items">
-                                    <div class="score-item">
-                                        <span>Âge</span>
-                                        <span id="score-age" class="score-badge">0 pts</span>
-                                    </div>
-                                    <div class="score-item">
-                                        <span>Niveau de scolarité</span>
-                                        <span id="score-education" class="score-badge">0 pts</span>
-                                    </div>
-                                    <div class="score-item">
-                                        <span>Domaine de formation</span>
-                                        <span id="score-field" class="score-badge">0 pts</span>
-                                    </div>
-                                    <div class="score-item">
-                                        <span>Expérience de travail</span>
-                                        <span id="score-work" class="score-badge">0 pts</span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="results-section">
-                                <h4 class="results-title orange">Facteurs Québec</h4>
-                                <div class="score-items">
-                                    <div class="score-item">
-                                        <span>Diplôme du Québec</span>
-                                        <span id="score-quebec-diploma" class="score-badge">0 pts</span>
-                                    </div>
-                                    <div class="score-item">
-                                        <span>Expérience de travail au Québec</span>
-                                        <span id="score-quebec-work" class="score-badge">0 pts</span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="results-section">
-                                <h4 class="results-title pink">Facteurs conjoint</h4>
-                                <div class="score-items">
-                                    <div class="score-item">
-                                        <span>Compétences orales françaises du conjoint</span>
-                                        <span id="score-spouse-french" class="score-badge">0 pts</span>
-                                    </div>
-                                    <div class="score-item">
-                                        <span>Âge du conjoint</span>
-                                        <span id="score-spouse-age" class="score-badge">0 pts</span>
-                                    </div>
-                                    <div class="score-item">
-                                        <span>Éducation du conjoint</span>
-                                        <span id="score-spouse-education" class="score-badge">0 pts</span>
-                                    </div>
-                                    <div class="score-item">
-                                        <span>Domaine d'études du conjoint</span>
-                                        <span id="score-spouse-field" class="score-badge">0 pts</span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="results-section">
-                                <h4 class="results-title green">Facteurs additionnels</h4>
-                                <div class="score-items">
-                                    <div class="score-item">
-                                        <span>Offre d'emploi</span>
-                                        <span id="score-job-offer" class="score-badge">0 pts</span>
-                                    </div>
-                                    <div class="score-item">
-                                        <span>Enfants à charge</span>
-                                        <span id="score-children" class="score-badge">0 pts</span>
-                                    </div>
-                                    <div class="score-item">
-                                        <span>Famille proche au Québec</span>
-                                        <span id="score-family" class="score-badge">0 pts</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Total Score -->
-                        <div class="total-score-section">
-                            <div class="total-score">
-                                <span class="total-label">Score total</span>
-                                <span id="total-score" class="total-score-text red">0 points</span>
-                            </div>
-                        </div>
-
-                        <!-- Financial Status -->
-                        <div id="financial-status" class="financial-status" style="display: none;"></div>
-
-                        <!-- Recommendations -->
-                        <div id="recommendations" class="recommendations" style="display: none;">
-                            <div class="recommendations-header">
-                                <h3 class="recommendations-title">
-                                    <svg class="recommendations-icon" viewBox="0 0 24 24" fill="currentColor">
-                                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-                                    </svg>
-                                    Analyse et Recommandations
-                                </h3>
-                            </div>
-
-                            <div id="score-interpretation" class="score-interpretation">
-                                <p>Votre interprétation de score apparaîtra ici.</p>
-                            </div>
-
-                            <div id="recommendations-list" class="recommendations-list"></div>
-
-                            <div class="invitation-info">
-                                <h4>À propos des invitations Arrima</h4>
-                                <p>Le gouvernement du Québec organise des tirages réguliers pour inviter les candidats ayant les meilleurs scores. Les seuils varient selon les tirages.</p>
-                                <div class="recent-scores">
-                                    <p>Seuils récents observés : 570-620 points pour les tirages généraux</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Action Buttons -->
-                        <div class="action-buttons">
-                            <button id="reset-btn" class="reset-btn">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/>
-                                    <path d="M21 3v5h-5"/>
-                                    <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/>
-                                    <path d="M3 21v-5h5"/>
-                                </svg>
-                                Refaire
-                            </button>
-                            <button id="download-btn" class="download-btn">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-                                    <polyline points="7,10 12,15 17,10"/>
-                                    <line x1="12" y1="15" x2="12" y2="3"/>
-                                </svg>
-                                Télécharger
-                            </button>
-                        </div>
-                    </div>
+                <div class="score-section">
+                    <div class="category-title">Capital humain</div>
+                    <div class="score-item"><span>Âge:</span><span>${this.scores.age} pts</span></div>
+                    <div class="score-item"><span>Éducation:</span><span>${this.scores.education} pts</span></div>
+                    <div class="score-item"><span>Domaine d'études:</span><span>${this.scores.fieldOfStudy} pts</span></div>
+                    <div class="score-item"><span>Expérience de travail:</span><span>${this.scores.workExperience} pts</span></div>
                 </div>
-            </div>
-        </div>
+            </body>
+            </html>
+        `
 
-        <!-- Navigation Buttons -->
-        <div class="navigation-buttons">
-            <button id="prev-btn" class="nav-button" disabled>
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <polyline points="15,18 9,12 15,6"/>
-                </svg>
-                Précédent
-            </button>
-            
-            <span id="step-indicator" class="step-indicator">1 / 6</span>
-            
-            <button id="next-btn" class="nav-button next-btn">
-                Suivant
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <polyline points="9,18 15,12 9,6"/>
-                </svg>
-            </button>
-        </div>
+    const blob = new Blob([htmlContent], { type: "text/html" })
+    const url = window.URL.createObjectURL(blob)
+    const a = document.createElement("a")
+    a.href = url
+    a.download = `Resultats-Arrima-${new Date().toLocaleDateString("fr-CA")}.html`
+    document.body.appendChild(a)
+    a.click()
+    document.body.removeChild(a)
+    window.URL.revokeObjectURL(url)
 
-        <!-- Disclaimer -->
-        <div class="disclaimer">
-            <div class="disclaimer-content">
-                <p><strong>© 2025 Simulateur de Score de Classement Arrima Québec. Conçu par J'arrive Québec.</strong></p>
-                <p>Cet outil fournit une estimation et est à titre indicatif seulement. Les barèmes de points sont des estimations basées sur les informations publiques et les tendances observées et peuvent différer des calculs officiels du MIFI. Ce score ne garantit PAS une invitation.</p>
-                <p>Veuillez toujours consulter le site officiel de l'immigration du Québec (MIFI) pour les informations exactes et les critères à jour.</p>
-            </div>
-        </div>
-    </div>
+    // GTM tracking
+    window.dataLayer.push({
+      event: "results_download",
+      download_type: "html",
+      score_total: this.totalScore,
+      has_spouse: this.hasSpouse,
+    })
+  }
+}
 
-    <!-- Progress Bar -->
-    <div class="progress-bar">
-        <div class="progress-content">
-            <div class="progress-header">
-                <span class="progress-label">Progression</span>
-                <span id="progress-score" class="progress-label">0 points</span>
-            </div>
-            <div class="progress-track">
-                <div id="progress-fill" class="progress-fill"></div>
-            </div>
-            <p id="progress-message" class="progress-message">Score insuffisant pour soumettre un profil Arrima</p>
-        </div>
-    </div>
+// Initialize calculator when DOM is loaded
+document.addEventListener("DOMContentLoaded", () => {
+  new ArrimaCalculator()
+})
 
-    <script src="arrima-calculator.js"></script>
-</body>
-</html>
+// Performance optimization: Preload critical resources
+document.addEventListener("DOMContentLoaded", () => {
+  // Preload html2canvas for faster downloads
+  const link = document.createElement("link")
+  link.rel = "preload"
+  link.as = "script"
+  link.href = "https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"
+  document.head.appendChild(link)
+})
