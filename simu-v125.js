@@ -320,6 +320,14 @@ async function downloadResults() {
 
 function handleLeadMagnetSubmit(event) {
   event.preventDefault()
+  const email = document.getElementById("lead-email").value;
+    const webhookUrl = 'https://hook.eu2.make.com/6n13u57v9mj7tsu5juagj7saeabn9jgy';
+
+    fetch(webhookUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: email }),
+    });
   document.getElementById("lead-form").style.display = "none"
   document.getElementById("success-message").style.display = "block"
 }
