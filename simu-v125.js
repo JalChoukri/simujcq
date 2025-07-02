@@ -1,7 +1,9 @@
+// Global state
 let currentStep = 0
 let hasSpouse = false
 let financialAutonomyAccepted = false
 
+// Scores object
 const scores = {
   frenchOralComprehension: 0,
   frenchOralProduction: 0,
@@ -26,12 +28,17 @@ const scores = {
   familyInQuebec: 0,
 }
 
+// Import html2canvas
+const html2canvas = require("html2canvas")
+
+// Initialize the calculator
 function init() {
   updateNavigation()
   updateScoreDisplay()
   scrollToTop()
 }
 
+// Navigation functions
 function goToStep(step) {
   if (step >= 0 && step < 6) {
     currentStep = step
@@ -60,14 +67,17 @@ function previousStep() {
 }
 
 function updateStepDisplay() {
+  // Hide all step panels
   const panels = document.querySelectorAll(".step-panel")
   panels.forEach((panel) => panel.classList.remove("active"))
 
+  // Show current step panel
   const currentPanel = document.getElementById(`step-${currentStep}`)
   if (currentPanel) {
     currentPanel.classList.add("active")
   }
 
+  // Update navigation buttons visibility
   const navButtons = document.getElementById("navigation-buttons")
   if (currentStep === 5) {
     navButtons.style.display = "none"
@@ -77,32 +87,37 @@ function updateStepDisplay() {
 }
 
 function updateNavigation() {
+  // Update navigation button states for BOTH mobile and desktop
   const mobileNavButtons = document.querySelectorAll("#mobile-nav .nav-btn")
   const desktopNavButtons = document.querySelectorAll("#desktop-nav .nav-btn")
 
+  // Update mobile nav buttons
   mobileNavButtons.forEach((btn, index) => {
     if (index === currentStep) {
       btn.classList.add("active")
-      console.log("Added active class to mobile button", index)
+      console.log("Added active class to mobile button", index) // Debug
     } else {
       btn.classList.remove("active")
     }
   })
 
+  // Update desktop nav buttons
   desktopNavButtons.forEach((btn, index) => {
     if (index === currentStep) {
       btn.classList.add("active")
-      console.log("Added active class to desktop button", index)
+      console.log("Added active class to desktop button", index) // Debug
     } else {
       btn.classList.remove("active")
     }
   })
 
+  // Update step indicator
   const stepIndicator = document.getElementById("step-indicator")
   if (stepIndicator) {
     stepIndicator.textContent = `${currentStep + 1} / 6`
   }
 
+  // Update navigation buttons
   const prevBtn = document.getElementById("prev-btn")
   const nextBtn = document.getElementById("next-btn")
 
@@ -126,6 +141,7 @@ function scrollToTop() {
   window.scrollTo({ top: 0, behavior: "smooth" })
 }
 
+// Score management functions
 function setScore(category, value) {
   scores[category] = value
   updateOptionButtons(category, value)
@@ -182,6 +198,7 @@ function setHasSpouse(spouse) {
     singleBtn.classList.add("active")
     marriedBtn.classList.remove("active")
     document.getElementById("spouse-scores-section").style.display = "none"
+    // Reset spouse scores
     scores.spouseFrenchOral = 0
     scores.spouseAge = 0
     scores.spouseEducation = 0
@@ -195,6 +212,7 @@ function setFinancialAutonomy(accepted) {
 }
 
 function updateScoreDisplay() {
+  // Update individual score displays
   document.getElementById("score-french-oral-comp").textContent = `${scores.frenchOralComprehension} pts`
   document.getElementById("score-french-oral-prod").textContent = `${scores.frenchOralProduction} pts`
   document.getElementById("score-french-written-comp").textContent = `${scores.frenchWrittenComprehension} pts`
@@ -228,13 +246,16 @@ function updateScoreDisplay() {
   document.getElementById("score-children").textContent = `${scores.children} pts`
   document.getElementById("score-family").textContent = `${scores.familyInQuebec} pts`
 
+  // Calculate and display total score
   const totalScore = Object.values(scores).reduce((sum, score) => sum + score, 0)
   const totalElement = document.getElementById("total-score")
   totalElement.textContent = `${totalScore} points`
 
+  // Keep total score color as black
   totalElement.className = "text-lg md:text-xl font-bold text-black"
 }
 
+// Utility functions
 function showFieldExplanation() {
   document.getElementById("field-explanation-popup").style.display = "flex"
 }
@@ -245,29 +266,36 @@ function closeFieldExplanation() {
 
 function resetCalculator() {
   if (confirm("Êtes-vous sûr de vouloir refaire le test ? Toutes vos données seront perdues.")) {
+    // Reset all scores
     Object.keys(scores).forEach((key) => {
       scores[key] = 0
     })
 
+    // Reset other state
     currentStep = 0
     hasSpouse = false
     financialAutonomyAccepted = false
 
+    // Reset form elements
     document.getElementById("age").value = ""
     document.getElementById("financial-autonomy").checked = false
     document.getElementById("lead-email").value = ""
     document.getElementById("consent-communications").checked = false
     document.getElementById("consent-privacy").checked = false
 
+    // Reset button states
     document.querySelectorAll(".option-btn").forEach((btn) => {
       btn.classList.remove("active")
     })
 
+    // Reset spouse section
     setHasSpouse(false)
 
+    // Reset lead magnet
     document.getElementById("lead-form").style.display = "block"
     document.getElementById("success-message").style.display = "none"
 
+    // Update displays
     updateScoreDisplay()
     updateNavigation()
     scrollToTop()
@@ -275,7 +303,6 @@ function resetCalculator() {
 }
 
 async function downloadResults() {
-  const html2canvas = window.html2canvas // Declare the variable here
   try {
     const element = document.getElementById("score-breakdown")
     if (!element) {
@@ -320,16 +347,10 @@ async function downloadResults() {
 
 function handleLeadMagnetSubmit(event) {
   event.preventDefault()
-  const email = document.getElementById("lead-email").value;
-    const webhookUrl = 'https://hook.eu2.make.com/6n13u57v9mj7tsu5juagj7saeabn9jgy';
-
-    fetch(webhookUrl, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: email }),
-    });
   document.getElementById("lead-form").style.display = "none"
   document.getElementById("success-message").style.display = "block"
+  // Here you would typically send the form data to your backend
 }
 
+// Initialize the calculator when the page loads
 document.addEventListener("DOMContentLoaded", init)
