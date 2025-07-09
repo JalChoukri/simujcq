@@ -180,12 +180,14 @@ body {
 }
 
 .main-app {
+  width: 100vw;
   min-height: 100vh;
   display: flex;
   justify-content: center;
   align-items: flex-start;
   padding: 1rem;
   background: linear-gradient(135deg, #dbeafe 0%, #e0e7ff 100%);
+  box-sizing: border-box;
 }
 
 .fixed-nav {
@@ -325,10 +327,12 @@ body {
 }
 
 .main-content {
+  width: 100%;
   max-width: 64rem;
   margin-top: 2rem;
   margin-left: auto;
   margin-right: auto;
+  border: 2px solid red;
 }
 
 .form-pages {
@@ -1577,67 +1581,21 @@ body {
                 <div class="alert info">
                   <strong>Maximum :</strong> 130 points pour les informations du conjoint
                 </div>
-                <!-- Français du conjoint -->
                 <div class="section-group">
-                    <h3 class="group-title">Connaissance du français du conjoint</h3>
-                    <p class="group-subtitle">Maximum : 40 points</p>
-
-                    <div class="form-grid">
-                        <div class="form-group">
-                            <label class="form-label">Compréhension orale</label>
-                            <select id="spouseFrenchOral" class="form-select">
-                                <option value="">Sélectionnez le niveau</option>
-                                <option value="1-3">Niveau 1 à 3 (0 points)</option>
-                                <option value="4">Niveau 4 (4 points)</option>
-                                <option value="5-6">Niveau 5 ou 6 (6 points)</option>
-                                <option value="7-8">Niveau 7 ou 8 (8 points)</option>
-                                <option value="9-10">Niveau 9 ou 10 (10 points)</option>
-                                <option value="11-12">Niveau 11 ou 12 (10 points)</option>
-                            </select>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="form-label">Production orale</label>
-                            <select id="spouseFrenchOralProduction" class="form-select">
-                                <option value="">Sélectionnez le niveau</option>
-                                <option value="1-3">Niveau 1 à 3 (0 points)</option>
-                                <option value="4">Niveau 4 (4 points)</option>
-                                <option value="5-6">Niveau 5 ou 6 (6 points)</option>
-                                <option value="7-8">Niveau 7 ou 8 (8 points)</option>
-                                <option value="9-10">Niveau 9 ou 10 (10 points)</option>
-                                <option value="11-12">Niveau 11 ou 12 (10 points)</option>
-                            </select>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="form-label">Compréhension écrite</label>
-                            <select id="spouseFrenchWritten" class="form-select">
-                                <option value="">Sélectionnez le niveau</option>
-                                <option value="1-3">Niveau 1 à 3 (0 points)</option>
-                                <option value="4">Niveau 4 (4 points)</option>
-                                <option value="5-6">Niveau 5 ou 6 (6 points)</option>
-                                <option value="7-8">Niveau 7 ou 8 (8 points)</option>
-                                <option value="9-10">Niveau 9 ou 10 (10 points)</option>
-                                <option value="11-12">Niveau 11 ou 12 (10 points)</option>
-                            </select>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="form-label">Production écrite</label>
-                            <select id="spouseFrenchWrittenProduction" class="form-select">
-                                <option value="">Sélectionnez le niveau</option>
-                                <option value="1-3">Niveau 1 à 3 (0 points)</option>
-                                <option value="4">Niveau 4 (4 points)</option>
-                                <option value="5-6">Niveau 5 ou 6 (6 points)</option>
-                                <option value="7-8">Niveau 7 ou 8 (8 points)</option>
-                                <option value="9-10">Niveau 9 ou 10 (10 points)</option>
-                                <option value="11-12">Niveau 11 ou 12 (10 points)</option>
-                            </select>
-                        </div>
-                    </div>
+                  <h3 class="group-title">Connaissance du français du conjoint</h3>
+                  <div class="form-group">
+                    <label class="form-label">Niveau de français de votre conjoint (meilleur résultat parmi les 4 compétences)</label>
+                    <select id="spouseFrench" class="form-select">
+                      <option value="">Sélectionnez le niveau</option>
+                      <option value="1-3">Niveau 1 à 3 (0 points)</option>
+                      <option value="4">Niveau 4 (4 points)</option>
+                      <option value="5-6">Niveau 5 ou 6 (6 points)</option>
+                      <option value="7-8">Niveau 7 ou 8 (8 points)</option>
+                      <option value="9-10">Niveau 9 ou 10 (10 points)</option>
+                      <option value="11-12">Niveau 11 ou 12 (10 points)</option>
+                    </select>
+                  </div>
                 </div>
-
-                <div class="separator"></div>
                 <div class="separator"></div>
                 <div class="section-group">
                   <h3 class="group-title">Scolarité du conjoint</h3>
@@ -1863,6 +1821,56 @@ const sectionData = [
   { icon: '👫', name: 'Conjoint' }
 ];
 
+// Add this function after scoringData and before initializeApp
+function updateAgeDropdown() {
+  const ageSelect = document.getElementById('age');
+  if (!ageSelect) return;
+
+  // Save current value to try to preserve selection
+  const currentValue = ageSelect.value;
+
+  // Age options and their keys
+  const ageOptions = [
+    { value: '18-19', label: '18 à 19 ans' },
+    { value: '20-30', label: '20 à 30 ans' },
+    { value: '31', label: '31 ans' },
+    { value: '32', label: '32 ans' },
+    { value: '33', label: '33 ans' },
+    { value: '34', label: '34 ans' },
+    { value: '35', label: '35 ans' },
+    { value: '36', label: '36 ans' },
+    { value: '37', label: '37 ans' },
+    { value: '38', label: '38 ans' },
+    { value: '39', label: '39 ans' },
+    { value: '40', label: '40 ans' },
+    { value: '41', label: '41 ans' },
+    { value: '42', label: '42 ans' },
+    { value: '43', label: '43 ans' },
+    { value: '44', label: '44 ans' },
+    { value: '45+', label: '45 ans ou plus' }
+  ];
+  const pointsData = hasSpouse ? scoringData.ageWithSpouse : scoringData.age;
+
+  // Clear all options
+  ageSelect.innerHTML = '';
+  // Add default option
+  const defaultOption = document.createElement('option');
+  defaultOption.value = '';
+  defaultOption.textContent = "Sélectionnez votre tranche d'âge";
+  ageSelect.appendChild(defaultOption);
+
+  // Add options with correct points
+  ageOptions.forEach(opt => {
+    const option = document.createElement('option');
+    option.value = opt.value;
+    option.textContent = `${opt.label} (${pointsData[opt.value]} points)`;
+    ageSelect.appendChild(option);
+  });
+
+  // Try to restore previous selection if possible
+  ageSelect.value = currentValue;
+}
+
 // Initialize app when DOM is loaded
 document.addEventListener('DOMContentLoaded', function() {
   initializeDisclaimer();
@@ -1894,6 +1902,7 @@ function initializeApp() {
   updateSectionDisplay();
   updateNavigation();
   updateProgressBar();
+  updateAgeDropdown(); // <-- update age dropdown on load
 }
 
 function initializeNavigation() {
@@ -1942,6 +1951,7 @@ function initializeSpouseToggle() {
       hasSpouse = this.value === 'true';
       toggleSpouseFields();
       updateMaxPointsDisplays();
+      updateAgeDropdown(); // <-- update age dropdown immediately
       calculateScore();
     });
   });
