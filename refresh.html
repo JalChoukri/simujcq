@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <script>
+        // Redirect to main calculator with cache-busting timestamp
+        const timestamp = new Date().getTime();
+        window.location.href = `./index.html?v=${timestamp}`;
+    </script>
+</head>
+<body>
+    <p>Redirecting to updated calculator...</p>
+</body>
+</html>
