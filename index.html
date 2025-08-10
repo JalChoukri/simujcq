@@ -2107,6 +2107,7 @@ function initializeApp() {
   updateProgressBar();
   updateAgeDropdown(); // <-- update age dropdown on load
   updateMaxPointsDisplays(); // <-- update max points displays on load
+  updateFrenchOptions(); // <-- ensure French options are set correctly on page load
 }
 
 function initializeNavigation() {
@@ -2161,7 +2162,9 @@ function initializeFormHandlers() {
 function initializeSpouseToggle() {
   document.querySelectorAll('input[name="hasSpouse"]').forEach(radio => {
     radio.addEventListener('change', function() {
+      console.log('Spouse status changed to:', this.value);
       hasSpouse = this.value === 'true';
+      console.log('hasSpouse variable set to:', hasSpouse);
       toggleSpouseFields();
       updateMaxPointsDisplays();
       updateAgeDropdown(); // <-- update age dropdown immediately
@@ -2206,6 +2209,8 @@ function updateMaxPointsDisplays() {
 }
 
 function updateFrenchOptions() {
+  console.log('updateFrenchOptions called, hasSpouse:', hasSpouse);
+  
   const frenchSelects = [
     'frenchOral',
     'frenchOralProduction', 
@@ -2215,7 +2220,12 @@ function updateFrenchOptions() {
   
   frenchSelects.forEach(selectId => {
     const select = document.getElementById(selectId);
-    if (!select) return;
+    if (!select) {
+      console.log('Select element not found:', selectId);
+      return;
+    }
+    
+    console.log('Updating select:', selectId);
     
     // Save current value
     const currentValue = select.value;
@@ -2231,6 +2241,7 @@ function updateFrenchOptions() {
     
     // Add options based on spouse status
     if (hasSpouse) {
+      console.log('Adding spouse options (40 points max)');
       // With spouse: Maximum 40 points each
       const options = [
         { value: '1-4', label: 'Niveau 1 à 4 (0 points)' },
@@ -2246,6 +2257,7 @@ function updateFrenchOptions() {
         select.appendChild(option);
       });
     } else {
+      console.log('Adding single options (50 points max)');
       // No spouse: Maximum 50 points each
       const options = [
         { value: '1-4', label: 'Niveau 1 à 4 (0 points)' },
@@ -2264,6 +2276,8 @@ function updateFrenchOptions() {
     
     // Restore previous value if possible
     select.value = currentValue;
+    
+    console.log('Updated select:', selectId, 'with', select.options.length, 'options');
   });
 }
 
