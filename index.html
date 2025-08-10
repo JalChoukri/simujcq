@@ -2107,7 +2107,7 @@ function initializeApp() {
   updateProgressBar();
   updateAgeDropdown(); // <-- update age dropdown on load
   updateMaxPointsDisplays(); // <-- update max points displays on load
-  updateFrenchOptions(); // <-- ensure French options are set correctly on page load
+  // All options will be updated by updateMaxPointsDisplays()
 }
 
 function initializeNavigation() {
@@ -2204,8 +2204,10 @@ function updateMaxPointsDisplays() {
   if (educationMaxPoints) educationMaxPoints.textContent = hasSpouse ? '110 points' : '130 points';
   if (workMaxPoints) workMaxPoints.textContent = hasSpouse ? '50 points' : '70 points';
   
-  // Update French option values based on spouse status
+  // Update all option values based on spouse status
   updateFrenchOptions();
+  updateWorkExperienceOptions();
+  updateEducationOptions();
 }
 
 function updateFrenchOptions() {
@@ -2279,6 +2281,156 @@ function updateFrenchOptions() {
     
     console.log('Updated select:', selectId, 'with', select.options.length, 'options');
   });
+}
+
+function updateWorkExperienceOptions() {
+  console.log('updateWorkExperienceOptions called, hasSpouse:', hasSpouse);
+  
+  const workSelect = document.getElementById('workExperience');
+  if (!workSelect) {
+    console.log('Work experience select element not found');
+    return;
+  }
+  
+  console.log('Updating work experience select');
+  
+  // Save current value
+  const currentValue = workSelect.value;
+  
+  // Clear options
+  workSelect.innerHTML = '';
+  
+  // Add default option
+  const defaultOption = document.createElement('option');
+  defaultOption.value = '';
+  defaultOption.textContent = "Sélectionnez la durée";
+  workSelect.appendChild(defaultOption);
+  
+  // Add options based on spouse status
+  if (hasSpouse) {
+    console.log('Adding spouse work experience options (50 points max)');
+    // With spouse: Maximum 50 points
+    const options = [
+      { value: '0-11', label: 'Moins de 12 mois (0 points)' },
+      { value: '12-23', label: '12 à 23 mois (15 points)' },
+      { value: '24-35', label: '24 à 35 mois (30 points)' },
+      { value: '36-47', label: '36 à 47 mois (35 points)' },
+      { value: '48+', label: '48 mois et plus (50 points)' }
+    ];
+    options.forEach(opt => {
+      const option = document.createElement('option');
+      option.value = opt.value;
+      option.textContent = opt.label;
+      workSelect.appendChild(option);
+    });
+  } else {
+    console.log('Adding single work experience options (70 points max)');
+    // No spouse: Maximum 70 points
+    const options = [
+      { value: '0-11', label: 'Moins de 12 mois (0 points)' },
+      { value: '12-23', label: '12 à 23 mois (20 points)' },
+      { value: '24-35', label: '24 à 35 mois (40 points)' },
+      { value: '36-47', label: '36 à 47 mois (50 points)' },
+      { value: '48+', label: '48 mois et plus (70 points)' }
+    ];
+    options.forEach(opt => {
+      const option = document.createElement('option');
+      option.value = opt.value;
+      option.textContent = opt.label;
+      workSelect.appendChild(option);
+    });
+  }
+  
+  // Restore previous value if possible
+  workSelect.value = currentValue;
+  
+  console.log('Updated work experience select with', workSelect.options.length, 'options');
+}
+
+function updateEducationOptions() {
+  console.log('updateEducationOptions called, hasSpouse:', hasSpouse);
+  
+  const educationSelect = document.getElementById('education');
+  if (!educationSelect) {
+    console.log('Education select element not found');
+    return;
+  }
+  
+  console.log('Updating education select');
+  
+  // Save current value
+  const currentValue = educationSelect.value;
+  
+  // Clear options
+  educationSelect.innerHTML = '';
+  
+  // Add default option
+  const defaultOption = document.createElement('option');
+  defaultOption.value = '';
+  defaultOption.textContent = "Sélectionnez votre niveau";
+  educationSelect.appendChild(defaultOption);
+  
+  // Add options based on spouse status
+  if (hasSpouse) {
+    console.log('Adding spouse education options (110 points max)');
+    // With spouse: Maximum 110 points
+    const options = [
+      { value: 'secondaire-general', label: 'Secondaire général complété (11 points)' },
+      { value: 'secondaire-pro-600', label: 'Secondaire professionnel 600-899h (Québec) (11 points)' },
+      { value: 'secondaire-pro-900', label: 'Secondaire professionnel 900h+ (Québec) (22 points)' },
+      { value: 'secondaire-pro-1an', label: 'Secondaire professionnel 1 an+ (hors Québec) (22 points)' },
+      { value: 'postsecondaire-general', label: 'Postsecondaire général 2 ans (33 points)' },
+      { value: 'postsecondaire-tech-900', label: 'Postsecondaire technique 900h+ (Québec) (44 points)' },
+      { value: 'postsecondaire-tech-1-2', label: 'Postsecondaire technique 1-2 ans (hors Québec) (44 points)' },
+      { value: 'postsecondaire-tech-3', label: 'Postsecondaire technique 3 ans (66 points)' },
+      { value: 'universitaire-1-1', label: 'Universitaire 1er cycle 1 an (66 points)' },
+      { value: 'universitaire-1-2', label: 'Universitaire 1er cycle 2 ans (77 points)' },
+      { value: 'universitaire-1-3-4', label: 'Universitaire 1er cycle 3-4 ans (88 points)' },
+      { value: 'universitaire-1-5', label: 'Universitaire 1er cycle 5 ans+ (93 points)' },
+      { value: 'universitaire-2-1', label: 'Universitaire 2e cycle 1 an (93 points)' },
+      { value: 'universitaire-2-2', label: 'Universitaire 2e cycle 2 ans+ (99 points)' },
+      { value: 'universitaire-medical', label: 'Universitaire spécialisation médicale 2 ans+ (110 points)' },
+      { value: 'universitaire-3', label: 'Universitaire 3e cycle (110 points)' }
+    ];
+    options.forEach(opt => {
+      const option = document.createElement('option');
+      option.value = opt.value;
+      option.textContent = opt.label;
+      educationSelect.appendChild(option);
+    });
+  } else {
+    console.log('Adding single education options (130 points max)');
+    // No spouse: Maximum 130 points
+    const options = [
+      { value: 'secondaire-general', label: 'Secondaire général complété (13 points)' },
+      { value: 'secondaire-pro-600', label: 'Secondaire professionnel 600-899h (Québec) (13 points)' },
+      { value: 'secondaire-pro-900', label: 'Secondaire professionnel 900h+ (Québec) (26 points)' },
+      { value: 'secondaire-pro-1an', label: 'Secondaire professionnel 1 an+ (hors Québec) (26 points)' },
+      { value: 'postsecondaire-general', label: 'Postsecondaire général 2 ans (39 points)' },
+      { value: 'postsecondaire-tech-900', label: 'Postsecondaire technique 900h+ (Québec) (52 points)' },
+      { value: 'postsecondaire-tech-1-2', label: 'Postsecondaire technique 1-2 ans (hors Québec) (52 points)' },
+      { value: 'postsecondaire-tech-3', label: 'Postsecondaire technique 3 ans (78 points)' },
+      { value: 'universitaire-1-1', label: 'Universitaire 1er cycle 1 an (78 points)' },
+      { value: 'universitaire-1-2', label: 'Universitaire 1er cycle 2 ans (91 points)' },
+      { value: 'universitaire-1-3-4', label: 'Universitaire 1er cycle 3-4 ans (104 points)' },
+      { value: 'universitaire-1-5', label: 'Universitaire 1er cycle 5 ans+ (110 points)' },
+      { value: 'universitaire-2-1', label: 'Universitaire 2e cycle 1 an (110 points)' },
+      { value: 'universitaire-2-2', label: 'Universitaire 2e cycle 2 ans+ (117 points)' },
+      { value: 'universitaire-medical', label: 'Universitaire spécialisation médicale 2 ans+ (130 points)' },
+      { value: 'universitaire-3', label: 'Universitaire 3e cycle (130 points)' }
+    ];
+    options.forEach(opt => {
+      const option = document.createElement('option');
+      option.value = opt.value;
+      option.textContent = opt.label;
+      educationSelect.appendChild(option);
+    });
+  }
+  
+  // Restore previous value if possible
+  educationSelect.value = currentValue;
+  
+  console.log('Updated education select with', educationSelect.options.length, 'options');
 }
 
 
