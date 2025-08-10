@@ -1063,158 +1063,6 @@ body {
     display: flex;
   }
 }
-
-/* Exit Intent Popup Styles */
-.popup-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.8);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-  backdrop-filter: blur(4px);
-}
-
-.popup-content {
-  background: white;
-  border-radius: 1rem;
-  max-width: 500px;
-  width: 90%;
-  max-height: 90vh;
-  overflow-y: auto;
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-  animation: popupSlideIn 0.3s ease-out;
-}
-
-@keyframes popupSlideIn {
-  from {
-    opacity: 0;
-    transform: translateY(-20px) scale(0.95);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-
-.popup-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1.5rem 1.5rem 1rem 1.5rem;
-  border-bottom: 1px solid #e5e7eb;
-}
-
-.popup-header h3 {
-  font-size: 1.5rem;
-  font-weight: bold;
-  color: #1f2937;
-  margin: 0;
-}
-
-.popup-close {
-  background: none;
-  border: none;
-  font-size: 1.5rem;
-  color: #6b7280;
-  cursor: pointer;
-  padding: 0.25rem;
-  border-radius: 0.25rem;
-  transition: all 0.2s;
-}
-
-.popup-close:hover {
-  background: #f3f4f6;
-  color: #374151;
-}
-
-.popup-body {
-  padding: 1.5rem;
-}
-
-.popup-body p {
-  margin-bottom: 1rem;
-  color: #374151;
-  line-height: 1.6;
-}
-
-.popup-features {
-  margin: 1.5rem 0;
-}
-
-.feature-item {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  margin-bottom: 0.75rem;
-  color: #374151;
-}
-
-.feature-icon {
-  font-size: 1.25rem;
-}
-
-.popup-cta {
-  font-weight: 600;
-  color: #1f2937;
-  text-align: center;
-  margin: 1.5rem 0;
-}
-
-.popup-buttons {
-  display: flex;
-  gap: 1rem;
-  justify-content: center;
-  flex-wrap: wrap;
-}
-
-.popup-btn {
-  padding: 0.75rem 1.5rem;
-  border: none;
-  border-radius: 0.5rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s;
-  min-width: 120px;
-}
-
-.popup-btn.primary {
-  background: #2563eb;
-  color: white;
-}
-
-.popup-btn.primary:hover {
-  background: #1d4ed8;
-}
-
-.popup-btn.secondary {
-  background: #f3f4f6;
-  color: #374151;
-  border: 1px solid #d1d5db;
-}
-
-.popup-btn.secondary:hover {
-  background: #e5e7eb;
-}
-
-@media (max-width: 640px) {
-  .popup-content {
-    width: 95%;
-    margin: 1rem;
-  }
-  
-  .popup-buttons {
-    flex-direction: column;
-  }
-  
-  .popup-btn {
-    width: 100%;
-  }
-}
 </style>
 </head>
 <body>
@@ -1367,7 +1215,7 @@ body {
           <div class="results-content">
             <div class="score-display">
               <h2 id="total-score" class="total-score">0 points</h2>
-              <p class="score-subtitle">Score total sur un maximum de 1400</p>
+              <p class="score-subtitle">Score total sur un maximum de 1600</p>
             </div>
             <div class="breakdown-container">
               <div class="breakdown-grid">
@@ -1386,8 +1234,6 @@ body {
                   <div class="breakdown-items">
                     <div class="breakdown-item"><span>Diplôme du Québec:</span><span id="quebec-diploma" class="breakdown-value">0 pts</span></div>
                     <div class="breakdown-item"><span>Expérience de travail au Québec:</span><span id="quebec-work" class="breakdown-value">0 pts</span></div>
-                    <div class="breakdown-item"><span>Réponse aux besoins du Québec:</span><span id="quebec-needs" class="breakdown-value">0 pts</span></div>
-                    <div class="breakdown-item"><span>Durée d'études au Québec:</span><span id="quebec-study-duration" class="breakdown-value">0 pts</span></div>
                   </div>
                 </div>
                 <div class="breakdown-section">
@@ -1402,11 +1248,12 @@ body {
                   <h4 class="breakdown-title additional">Facteurs additionnels</h4>
                   <div class="breakdown-items">
                     <div class="breakdown-item"><span>Offre d'emploi:</span><span id="job-offer-score" class="breakdown-value">0 pts</span></div>
-                    <div class="breakdown-item"><span>Famille proche au Québec:</span><span id="family-score" class="breakdown-value">0 pts</span></div>
-                    <div class="breakdown-item"><span>Profession:</span><span id="profession-score" class="breakdown-value">0 pts</span></div>
+                    <div class="breakdown-item"><span>Profession (diagnostic main-d'œuvre):</span><span id="profession-score" class="breakdown-value">0 pts</span></div>
+                    <div class="breakdown-item"><span>Expérience dans la profession:</span><span id="profession-experience-score" class="breakdown-value">0 pts</span></div>
                     <div class="breakdown-item"><span>Autorisation professionnelle:</span><span id="authorization-score" class="breakdown-value">0 pts</span></div>
-                    <div class="breakdown-item"><span>Études au Québec:</span><span id="study-score" class="breakdown-value">0 pts</span></div>
+                    <div class="breakdown-item"><span>Études au Québec (sans diplôme):</span><span id="study-score" class="breakdown-value">0 pts</span></div>
                     <div class="breakdown-item"><span>Séjour hors Montréal:</span><span id="outside-montreal-score" class="breakdown-value">0 pts</span></div>
+                    <div class="breakdown-item"><span>Famille proche au Québec:</span><span id="family-score" class="breakdown-value">0 pts</span></div>
                     <div id="spouse-breakdown" class="spouse-breakdown" style="display: none;">
                       <div class="breakdown-item"><span>Français conjoint:</span><span id="spouse-french-score" class="breakdown-value">0 pts</span></div>
                       <div class="breakdown-item"><span>Âge conjoint:</span><span id="spouse-age-score" class="breakdown-value">0 pts</span></div>
@@ -1505,6 +1352,18 @@ body {
         </div>
 
         <div class="form-card">
+          <!-- Scoring Mode Indicator -->
+          <div id="scoring-mode-indicator" class="alert info" style="margin: 0 1.5rem 1rem 1.5rem; text-align: center; font-weight: 600;">
+            <div style="display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
+              <span id="scoring-mode-icon">👤</span>
+              <span id="scoring-mode-text">Mode de calcul : Colonne 2 (sans conjoint)</span>
+            </span>
+            </div>
+            <div style="margin-top: 0.5rem; font-size: 0.875rem; font-weight: normal;">
+              <strong>Note :</strong> Quand vous sélectionnez "J'ai un conjoint", le système utilise automatiquement la <strong>Colonne 3 (avec conjoint)</strong> du PDF officiel pour tous les calculs. Les nouveaux critères (profession, études, séjour hors Montréal) sont maintenant inclus.
+            </div>
+          </div>
+          
           <div class="form-header">
             <h2 class="section-title">
               <span id="section-icon" class="section-icon">👤</span>
@@ -1538,6 +1397,9 @@ body {
                 <h3 class="group-title">Âge</h3>
                 <div class="alert info">
                   <strong>Maximum :</strong> <span id="age-max-points">120 points</span> pour l'âge
+                  <div id="age-scoring-indicator" style="margin-top: 0.5rem; font-size: 0.875rem; color: #1e40af;">
+                    <strong>Scoring utilisé :</strong> <span id="age-scoring-type">Colonne 2 (sans conjoint)</span>
+                  </div>
                 </div>
                 <div class="form-group">
                   <label class="form-label">Votre âge</label>
@@ -1590,9 +1452,12 @@ body {
 
             <!-- Section 1: Français -->
             <div id="section-1" class="form-section">
-              <div class="alert info">
-                <strong>Maximum :</strong> <span id="french-max-points">200 points</span> pour la connaissance du français
+                          <div class="alert info">
+              <strong>Maximum :</strong> <span id="french-max-points">200 points</span> pour la connaissance du français
+              <div id="french-scoring-indicator" style="margin-top: 0.5rem; font-size: 0.875rem; color: #1e40af;">
+                <strong>Scoring utilisé :</strong> <span id="french-scoring-type">Colonne 2 (sans conjoint)</span>
               </div>
+            </div>
               <div class="form-grid">
                 <div class="form-group">
                   <label class="form-label">Compréhension orale</label>
@@ -1645,9 +1510,12 @@ body {
             <div id="section-2" class="form-section">
               <div class="section-group">
                 <h3 class="group-title">Niveau de scolarité</h3>
-                <div class="alert info">
-                  <strong>Maximum :</strong> <span id="education-max-points">130 points</span> pour le niveau de scolarité
-                </div>
+                            <div class="alert info">
+              <strong>Maximum :</strong> <span id="education-max-points">130 points</span> pour le niveau de scolarité
+              <div id="education-scoring-indicator" style="margin-top: 0.5rem; font-size: 0.875rem; color: #1e40af;">
+                <strong>Scoring utilisé :</strong> <span id="education-scoring-type">Colonne 2 (sans conjoint)</span>
+              </div>
+            </div>
                 <div class="form-group">
                   <label class="form-label">Votre plus haut niveau de scolarité</label>
                   <select id="education" class="form-select">
@@ -1674,9 +1542,12 @@ body {
               <div class="separator"></div>
               <div class="section-group">
                 <h3 class="group-title">Expérience de travail</h3>
-                <div class="alert info">
-                  <strong>Maximum :</strong> <span id="work-max-points">70 points</span> pour l'expérience de travail
-                </div>
+                            <div class="alert info">
+              <strong>Maximum :</strong> <span id="work-max-points">70 points</span> pour l'expérience de travail
+              <div id="work-scoring-indicator" style="margin-top: 0.5rem; font-size: 0.875rem; color: #1e40af;">
+                <strong>Scoring utilisé :</strong> <span id="work-scoring-type">Colonne 2 (sans conjoint)</span>
+              </div>
+            </div>
                 <div class="form-group">
                   <label class="form-label">Durée de votre expérience de travail (au cours des 5 dernières années)</label>
                   <select id="workExperience" class="form-select">
@@ -1740,37 +1611,20 @@ body {
               </div>
               <div class="separator"></div>
               <div class="section-group">
-                <h3 class="group-title">Réponse aux besoins du Québec et aux priorités gouvernementales</h3>
+                <h3 class="group-title">Études au Québec</h3>
                 <div class="alert info">
-                  <strong>Maximum :</strong> 50 points pour la réponse aux besoins du Québec
+                  <strong>Maximum :</strong> 50 points pour la durée du séjour d'études sans diplôme au Québec
                 </div>
                 <div class="form-group">
-                  <label class="form-label">Votre domaine d'études répond-il aux besoins du Québec ?</label>
-                  <select id="quebecNeeds" class="form-select">
-                    <option value="">Sélectionnez votre domaine</option>
-                    <option value="aucun">Aucun domaine prioritaire (0 points)</option>
-                    <option value="formation-professionnelle">Formation professionnelle (30 points)</option>
-                    <option value="formation-technique">Formation technique (30 points)</option>
-                    <option value="formation-universitaire">Formation universitaire (50 points)</option>
-                  </select>
-                </div>
-              </div>
-              <div class="separator"></div>
-              <div class="section-group">
-                <h3 class="group-title">Durée du séjour d'études sans diplôme au Québec</h3>
-                <div class="alert info">
-                  <strong>Maximum :</strong> 30 points pour la durée du séjour d'études
-                </div>
-                <div class="form-group">
-                  <label class="form-label">Combien de temps avez-vous étudié au Québec sans obtenir de diplôme ?</label>
+                  <label class="form-label">Durée de votre séjour d'études au Québec (sans diplôme obtenu)</label>
                   <select id="quebecStudyDuration" class="form-select">
                     <option value="">Sélectionnez la durée</option>
                     <option value="aucun">Aucun séjour d'études (0 points)</option>
-                    <option value="moins-6mois">Moins de 6 mois (5 points)</option>
-                    <option value="6-11mois">6 à 11 mois (10 points)</option>
-                    <option value="12-23mois">12 à 23 mois (15 points)</option>
-                    <option value="24-35mois">24 à 35 mois (20 points)</option>
-                    <option value="36mois-plus">36 mois et plus (30 points)</option>
+                    <option value="6-11">6 à 11 mois (10 points)</option>
+                    <option value="12-23">12 à 23 mois (20 points)</option>
+                    <option value="24-35">24 à 35 mois (30 points)</option>
+                    <option value="36-47">36 à 47 mois (40 points)</option>
+                    <option value="48+">48 mois et plus (50 points)</option>
                   </select>
                 </div>
               </div>
@@ -1795,6 +1649,48 @@ body {
               </div>
               <div class="separator"></div>
               <div class="section-group">
+                <h3 class="group-title">Profession et diagnostic de main-d'œuvre</h3>
+                <div class="alert info">
+                  <strong>Maximum :</strong> 50 points pour la profession et le diagnostic de main-d'œuvre
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Votre profession principale (selon le diagnostic de main-d'œuvre du Québec)</label>
+                  <select id="profession" class="form-select">
+                    <option value="">Sélectionnez votre profession</option>
+                    <option value="profession-demande">Profession en demande (50 points)</option>
+                    <option value="profession-reguliere">Profession régulière (30 points)</option>
+                    <option value="profession-satiree">Profession saturée (0 points)</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Durée de l'expérience dans votre profession principale (5 dernières années)</label>
+                  <select id="professionExperience" class="form-select">
+                    <option value="">Sélectionnez la durée</option>
+                    <option value="0-11">Moins de 12 mois (0 points)</option>
+                    <option value="12-23">12 à 23 mois (10 points)</option>
+                    <option value="24-35">24 à 35 mois (20 points)</option>
+                    <option value="36-47">36 à 47 mois (30 points)</option>
+                    <option value="48+">48 mois et plus (40 points)</option>
+                  </select>
+                </div>
+              </div>
+              <div class="separator"></div>
+              <div class="section-group">
+                <h3 class="group-title">Autorisation professionnelle</h3>
+                <div class="alert info">
+                  <strong>Maximum :</strong> 30 points pour l'autorisation professionnelle
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Avez-vous une autorisation d'exercer votre profession au Québec ?</label>
+                  <select id="professionalAuthorization" class="form-select">
+                    <option value="">Sélectionnez votre situation</option>
+                    <option value="aucun">Aucune autorisation (0 points)</option>
+                    <option value="autorisation-validee">Autorisation validée (30 points)</option>
+                  </select>
+                </div>
+              </div>
+              <div class="separator"></div>
+              <div class="section-group">
                 <h3 class="group-title">Famille au Québec</h3>
                 <div class="alert info">
                   <strong>Maximum :</strong> 10 points pour un membre de la parenté au Québec
@@ -1806,6 +1702,21 @@ body {
                     <option value="aucun">Aucun membre de la parenté (0 points)</option>
                     <option value="lie-ressortissant">Membre lié au ressortissant étranger (10 points)</option>
                     <option value="lie-conjoint">Membre lié au conjoint (5 points)</option>
+                  </select>
+                </div>
+              </div>
+              <div class="separator"></div>
+              <div class="section-group">
+                <h3 class="group-title">Séjour hors Montréal</h3>
+                <div class="alert info">
+                  <strong>Maximum :</strong> 30 points pour un séjour hors de la CMM
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Avez-vous l'intention de vous établir à l'extérieur de la CMM ?</label>
+                  <select id="outsideMontreal" class="form-select">
+                    <option value="">Sélectionnez votre intention</option>
+                    <option value="non">Non, je reste dans la CMM (0 points)</option>
+                    <option value="oui">Oui, je m'établis hors de la CMM (30 points)</option>
                   </select>
                 </div>
               </div>
@@ -1994,42 +1905,6 @@ body {
   </div>
 </div>
 
-<!-- Exit Intent Popup -->
-<div id="exit-popup" class="popup-overlay" style="display: none;">
-  <div class="popup-content">
-    <div class="popup-header">
-      <h3>Attendez ! 🚀</h3>
-      <button class="popup-close" onclick="closeExitPopup()">&times;</button>
-    </div>
-    <div class="popup-body">
-      <p>Vous êtes sur le point de quitter le simulateur Arrima le plus complet et précis du Québec !</p>
-      <div class="popup-features">
-        <div class="feature-item">
-          <span class="feature-icon">✅</span>
-          <span>Grille officielle MIFI 2025</span>
-        </div>
-        <div class="feature-item">
-          <span class="feature-icon">✅</span>
-          <span>Calcul automatique en temps réel</span>
-        </div>
-        <div class="feature-item">
-          <span class="feature-icon">✅</span>
-          <span>Résultats détaillés et exportables</span>
-        </div>
-        <div class="feature-item">
-          <span class="feature-icon">✅</span>
-          <span>100% gratuit et sans inscription</span>
-        </div>
-      </div>
-      <p class="popup-cta">Voulez-vous vraiment partir sans connaître votre score ?</p>
-      <div class="popup-buttons">
-        <button class="popup-btn primary" onclick="closeExitPopup()">Continuer le simulateur</button>
-        <button class="popup-btn secondary" onclick="closeExitPopup()">Fermer</button>
-      </div>
-    </div>
-  </div>
-</div>
-
 <script>
 // Global variables
 let currentSection = 0;
@@ -2037,8 +1912,11 @@ const totalSections = 6;
 let hasSpouse = false;
 let calculatorResults = null;
 
-// Scoring data
+// Scoring data - Column 1: No spouse, Column 2: With spouse (3rd column in PDF)
+// Note: When hasSpouse = true, the system automatically uses the "with spouse" scoring
+// which corresponds to the 3rd column in the official PDF (Colonne 3: Avec conjoint)
 const scoringData = {
+  // Age scoring - Column 1 vs Column 2 (3rd column in PDF)
   age: {
     '18-19': 110, '20-30': 120, '31': 110, '32': 100, '33': 90, '34': 80,
     '35': 75, '36': 70, '37': 65, '38': 60, '39': 55, '40': 50,
@@ -2054,6 +1932,8 @@ const scoringData = {
     '35': 14, '36': 12, '37': 10, '38': 8, '39': 7, '40': 6,
     '41': 5, '42': 4, '43': 3, '44': 2, '45+': 0
   },
+  
+  // French skills scoring - Column 1 vs Column 2 (3rd column in PDF)
   french: {
     '1-4': 0, '5-6': 38, '7-8': 44, '9-10': 50, '11-12': 50
   },
@@ -2063,6 +1943,8 @@ const scoringData = {
   spouseFrench: {
     '1-3': 0, '4': 4, '5-6': 6, '7-8': 8, '9-10': 10, '11-12': 10
   },
+  
+  // Education scoring - Column 1 vs Column 2 (3rd column in PDF)
   education: {
     'secondaire-general': 13, 'secondaire-pro-600': 13, 'secondaire-pro-900': 26,
     'secondaire-pro-1an': 26, 'postsecondaire-general': 39, 'postsecondaire-tech-900': 52,
@@ -2087,12 +1969,16 @@ const scoringData = {
     'universitaire-2-1': 17, 'universitaire-2-2': 18, 'universitaire-medical': 20,
     'universitaire-3': 20
   },
+  
+  // Work experience scoring - Column 1 vs Column 2 (3rd column in PDF)
   workExperience: {
     '0-11': 0, '12-23': 20, '24-35': 40, '36-47': 50, '48+': 70
   },
   workExperienceWithSpouse: {
     '0-11': 0, '12-23': 15, '24-35': 30, '36-47': 35, '48+': 50
   },
+  
+  // Quebec diploma scoring - Column 1 vs Column 2 (3rd column in PDF)
   quebecDiploma: {
     'aucun': 0, 'secondaire-general': 20, 'secondaire-pro-600': 20, 'secondaire-pro-900': 40,
     'postsecondaire-general': 60, 'postsecondaire-tech-900': 80, 'postsecondaire-tech-3': 120,
@@ -2107,23 +1993,48 @@ const scoringData = {
     'universitaire-1-5': 25, 'universitaire-2-1': 25, 'universitaire-2-2': 27,
     'universitaire-medical': 30, 'universitaire-3': 30
   },
+  
+  // Quebec work experience scoring - Column 1 vs Column 2 (3rd column in PDF)
   quebecWorkExperience: {
     '0-11': 0, '12-23': 40, '24-35': 80, '36-47': 120, '48-60': 160
   },
   spouseQuebecWork: {
     '0-5': 0, '6-11': 5, '12-23': 10, '24-35': 15, '36-47': 23, '48-60': 30
   },
+  
+  // Job offer scoring - Same for both (no spouse adjustment)
   jobOffer: {
     'aucun': 0, 'exterieur-cmm': 50, 'interieur-cmm': 30
   },
+  
+  // Profession scoring - Same for both (no spouse adjustment)
+  profession: {
+    'aucun': 0, 'profession-demande': 50, 'profession-reguliere': 30, 'profession-satiree': 0
+  },
+  
+  // Profession experience scoring - Same for both (no spouse adjustment)
+  professionExperience: {
+    'aucun': 0, '0-11': 0, '12-23': 10, '24-35': 20, '36-47': 30, '48+': 40
+  },
+  
+  // Professional authorization scoring - Same for both (no spouse adjustment)
+  professionalAuthorization: {
+    'aucun': 0, 'autorisation-validee': 30
+  },
+  
+  // Quebec study duration scoring - Same for both (no spouse adjustment)
+  quebecStudyDuration: {
+    'aucun': 0, '6-11': 10, '12-23': 20, '24-35': 30, '36-47': 40, '48+': 50
+  },
+  
+  // Outside Montreal scoring - Same for both (no spouse adjustment)
+  outsideMontreal: {
+    'non': 0, 'oui': 30
+  },
+  
+  // Family member scoring - Same for both (no spouse adjustment)
   familyMember: {
     'aucun': 0, 'lie-ressortissant': 10, 'lie-conjoint': 5
-  },
-  quebecNeeds: {
-    'aucun': 0, 'formation-professionnelle': 30, 'formation-technique': 30, 'formation-universitaire': 50
-  },
-  quebecStudyDuration: {
-    'aucun': 0, 'moins-6mois': 5, '6-11mois': 10, '12-23mois': 15, '24-35mois': 20, '36mois-plus': 30
   }
 };
 
@@ -2215,7 +2126,6 @@ function initializeApp() {
   initializeFormHandlers();
   initializeSpouseToggle();
   initializeResultsHandlers();
-  initializeExitIntentPopup();
   updateSectionDisplay();
   updateNavigation();
   updateProgressBar();
@@ -2260,6 +2170,15 @@ function initializeFormHandlers() {
       calculateScore();
     });
   });
+  
+  // Ensure all new form fields are included
+  const newFields = ['profession', 'professionExperience', 'professionalAuthorization', 'quebecStudyDuration', 'outsideMontreal'];
+  newFields.forEach(fieldId => {
+    const field = document.getElementById(fieldId);
+    if (field) {
+      field.addEventListener('change', calculateScore);
+    }
+  });
 }
 
 function initializeSpouseToggle() {
@@ -2277,31 +2196,6 @@ function initializeSpouseToggle() {
 function initializeResultsHandlers() {
   document.getElementById('download-results').addEventListener('click', downloadResults);
   document.getElementById('email-form').addEventListener('submit', handleEmailSubmit);
-}
-
-function initializeExitIntentPopup() {
-  let hasShownPopup = false;
-  
-  document.addEventListener('mouseleave', function(e) {
-    if (e.clientY <= 0 && !hasShownPopup) {
-      hasShownPopup = true;
-      showExitPopup();
-    }
-  });
-}
-
-function showExitPopup() {
-  const popup = document.getElementById('exit-popup');
-  if (popup) {
-    popup.style.display = 'flex';
-  }
-}
-
-function closeExitPopup() {
-  const popup = document.getElementById('exit-popup');
-  if (popup) {
-    popup.style.display = 'none';
-  }
 }
 
 function toggleSpouseFields() {
@@ -2329,6 +2223,36 @@ function updateMaxPointsDisplays() {
   if (frenchMaxPoints) frenchMaxPoints.textContent = hasSpouse ? '160 points' : '200 points';
   if (educationMaxPoints) educationMaxPoints.textContent = hasSpouse ? '110 points' : '130 points';
   if (workMaxPoints) workMaxPoints.textContent = hasSpouse ? '50 points' : '70 points';
+  
+  // Update scoring indicators to show which column is being used
+  updateScoringIndicators();
+}
+
+function updateScoringIndicators() {
+  const ageScoringType = document.getElementById('age-scoring-type');
+  const frenchScoringType = document.getElementById('french-scoring-type');
+  const educationScoringType = document.getElementById('education-scoring-type');
+  const workScoringType = document.getElementById('work-scoring-type');
+  
+  if (ageScoringType) {
+    ageScoringType.textContent = hasSpouse ? 'Colonne 3 (avec conjoint)' : 'Colonne 2 (sans conjoint)';
+    ageScoringType.style.color = hasSpouse ? '#dc2626' : '#1e40af';
+  }
+  
+  if (frenchScoringType) {
+    frenchScoringType.textContent = hasSpouse ? 'Colonne 3 (avec conjoint)' : 'Colonne 2 (sans conjoint)';
+    frenchScoringType.style.color = hasSpouse ? '#dc2626' : '#1e40af';
+  }
+  
+  if (educationScoringType) {
+    educationScoringType.textContent = hasSpouse ? 'Colonne 3 (avec conjoint)' : 'Colonne 2 (sans conjoint)';
+    educationScoringType.style.color = hasSpouse ? '#dc2626' : '#1e40af';
+  }
+  
+  if (workScoringType) {
+    workScoringType.textContent = hasSpouse ? 'Colonne 3 (avec conjoint)' : 'Colonne 2 (sans conjoint)';
+    workScoringType.style.color = hasSpouse ? '#dc2626' : '#1e40af';
+  }
 }
 
 function navigateToSection(sectionIndex) {
@@ -2426,22 +2350,28 @@ function calculateScore() {
   let totalScore = 0;
   let breakdown = {};
   
-  // Age
+  // Debug: Log which scoring tables are being used
+  console.log(`Calculating score with spouse: ${hasSpouse}`);
+  console.log(`Using scoring tables: ${hasSpouse ? 'WITH SPOUSE (3rd column)' : 'NO SPOUSE (2nd column)'}`);
+  
+  // Age - Uses Column 1 (no spouse) vs Column 2 (with spouse = 3rd column in PDF)
   const age = getFormValue('age');
   const ageScoreData = hasSpouse ? scoringData.ageWithSpouse : scoringData.age;
   const ageScore = ageScoreData[age] || 0;
   breakdown.age = ageScore;
   totalScore += ageScore;
+  console.log(`Age: ${age} = ${ageScore} points (table: ${hasSpouse ? 'ageWithSpouse' : 'age'})`);
   
-  // Spouse age
+  // Spouse age - Additional points when spouse is present
   if (hasSpouse) {
     const spouseAge = getFormValue('spouseAge');
     const spouseAgeScore = scoringData.spouseAge[spouseAge] || 0;
     breakdown.spouseAge = spouseAgeScore;
     totalScore += spouseAgeScore;
+    console.log(`Spouse age: ${spouseAge} = ${spouseAgeScore} points`);
   }
   
-  // French skills
+  // French skills - Uses Column 1 (no spouse) vs Column 2 (with spouse = 3rd column in PDF)
   const frenchScoreData = hasSpouse ? scoringData.frenchWithSpouse : scoringData.french;
   const frenchOral = getFormValue('frenchOral');
   const frenchOralProd = getFormValue('frenchOralProduction');
@@ -2460,58 +2390,88 @@ function calculateScore() {
   breakdown.frenchTotal = frenchOralScore + frenchOralProdScore + frenchWrittenScore + frenchWrittenProdScore;
   
   totalScore += breakdown.frenchTotal;
+  console.log(`French skills: ${breakdown.frenchTotal} points (table: ${hasSpouse ? 'frenchWithSpouse' : 'french'})`);
   
-  // Education
+  // Education - Uses Column 1 (no spouse) vs Column 2 (with spouse = 3rd column in PDF)
   const education = getFormValue('education');
   const educationScoreData = hasSpouse ? scoringData.educationWithSpouse : scoringData.education;
   const educationScore = educationScoreData[education] || 0;
   breakdown.education = educationScore;
   totalScore += educationScore;
+  console.log(`Education: ${education} = ${educationScore} points (table: ${hasSpouse ? 'educationWithSpouse' : 'education'})`);
   
-  // Work experience
+  // Work experience - Uses Column 1 (no spouse) vs Column 2 (with spouse = 3rd column in PDF)
   const workExperience = getFormValue('workExperience');
   const workScoreData = hasSpouse ? scoringData.workExperienceWithSpouse : scoringData.workExperience;
   const workExperienceScore = workScoreData[workExperience] || 0;
   breakdown.workExperience = workExperienceScore;
   totalScore += workExperienceScore;
+  console.log(`Work experience: ${workExperience} = ${workExperienceScore} points (table: ${hasSpouse ? 'workExperienceWithSpouse' : 'workExperience'})`);
   
-  // Quebec diploma
+  // Quebec diploma - Uses Column 1 (no spouse) vs Column 2 (with spouse = 3rd column in PDF)
   const quebecDiploma = getFormValue('quebecDiploma');
   const quebecDiplomaScore = scoringData.quebecDiploma[quebecDiploma] || 0;
   breakdown.quebecDiploma = quebecDiplomaScore;
   totalScore += quebecDiplomaScore;
+  console.log(`Quebec diploma: ${quebecDiploma} = ${quebecDiplomaScore} points`);
   
-  // Quebec work experience
+  // Quebec work experience - Uses Column 1 (no spouse) vs Column 2 (with spouse = 3rd column in PDF)
   const quebecWorkExperience = getFormValue('quebecWorkExperience');
   const quebecWorkScore = scoringData.quebecWorkExperience[quebecWorkExperience] || 0;
   breakdown.quebecWork = quebecWorkScore;
   totalScore += quebecWorkScore;
+  console.log(`Quebec work experience: ${quebecWorkExperience} = ${quebecWorkScore} points`);
   
-  // Quebec needs and priorities
-  const quebecNeeds = getFormValue('quebecNeeds');
-  const quebecNeedsScore = scoringData.quebecNeeds[quebecNeeds] || 0;
-  breakdown.quebecNeeds = quebecNeedsScore;
-  totalScore += quebecNeedsScore;
-  
-  // Quebec study duration without diploma
-  const quebecStudyDuration = getFormValue('quebecStudyDuration');
-  const quebecStudyDurationScore = scoringData.quebecStudyDuration[quebecStudyDuration] || 0;
-  breakdown.quebecStudyDuration = quebecStudyDurationScore;
-  totalScore += quebecStudyDurationScore;
-  
-  // Job offer
+  // Job offer - Same scoring for both (no spouse adjustment)
   const jobOffer = getFormValue('jobOffer');
   const jobOfferScore = scoringData.jobOffer[jobOffer] || 0;
   breakdown.jobOffer = jobOfferScore;
   totalScore += jobOfferScore;
+  console.log(`Job offer: ${jobOffer} = ${jobOfferScore} points`);
   
-  // Family member
+  // Profession - Same scoring for both (no spouse adjustment)
+  const profession = getFormValue('profession');
+  const professionScore = scoringData.profession[profession] || 0;
+  breakdown.profession = professionScore;
+  totalScore += professionScore;
+  console.log(`Profession: ${profession} = ${professionScore} points`);
+  
+  // Profession experience - Same scoring for both (no spouse adjustment)
+  const professionExperience = getFormValue('professionExperience');
+  const professionExperienceScore = scoringData.professionExperience[professionExperience] || 0;
+  breakdown.professionExperience = professionExperienceScore;
+  totalScore += professionExperienceScore;
+  console.log(`Profession experience: ${professionExperience} = ${professionExperienceScore} points`);
+  
+  // Professional authorization - Same scoring for both (no spouse adjustment)
+  const professionalAuthorization = getFormValue('professionalAuthorization');
+  const professionalAuthorizationScore = scoringData.professionalAuthorization[professionalAuthorization] || 0;
+  breakdown.professionalAuthorization = professionalAuthorizationScore;
+  totalScore += professionalAuthorizationScore;
+  console.log(`Professional authorization: ${professionalAuthorization} = ${professionalAuthorizationScore} points`);
+  
+  // Quebec study duration - Same scoring for both (no spouse adjustment)
+  const quebecStudyDuration = getFormValue('quebecStudyDuration');
+  const quebecStudyDurationScore = scoringData.quebecStudyDuration[quebecStudyDuration] || 0;
+  breakdown.quebecStudyDuration = quebecStudyDurationScore;
+  totalScore += quebecStudyDurationScore;
+  console.log(`Quebec study duration: ${quebecStudyDuration} = ${quebecStudyDurationScore} points`);
+  
+  // Outside Montreal - Same scoring for both (no spouse adjustment)
+  const outsideMontreal = getFormValue('outsideMontreal');
+  const outsideMontrealScore = scoringData.outsideMontreal[outsideMontreal] || 0;
+  breakdown.outsideMontreal = outsideMontrealScore;
+  totalScore += outsideMontrealScore;
+  console.log(`Outside Montreal: ${outsideMontreal} = ${outsideMontrealScore} points`);
+  
+  // Family member - Same scoring for both (no spouse adjustment)
   const familyMember = getFormValue('familyMember');
   const familyScore = scoringData.familyMember[familyMember] || 0;
   breakdown.family = familyScore;
   totalScore += familyScore;
+  console.log(`Family member: ${familyMember} = ${familyScore} points`);
   
-  // Spouse factors
+  // Spouse factors - Additional points when spouse is present
   if (hasSpouse) {
     // Spouse French
     const spouseFrenchOral = getFormValue('spouseFrenchOral');
@@ -2527,24 +2487,28 @@ function calculateScore() {
     const spouseFrenchScore = Math.max(...spouseFrenchScores);
     breakdown.spouseFrench = spouseFrenchScore;
     totalScore += spouseFrenchScore;
+    console.log(`Spouse French: ${spouseFrenchScore} points`);
     
     // Spouse education
     const spouseEducation = getFormValue('spouseEducation');
     const spouseEducationScore = scoringData.spouseEducation[spouseEducation] || 0;
     breakdown.spouseEducation = spouseEducationScore;
     totalScore += spouseEducationScore;
+    console.log(`Spouse education: ${spouseEducation} = ${spouseEducationScore} points`);
     
     // Spouse Quebec diploma
-    const spouseQuebecDiploma = getFormValue('spouseEducation');
+    const spouseQuebecDiploma = getFormValue('spouseQuebecDiploma');
     const spouseQuebecDiplomaScore = scoringData.spouseQuebecDiploma[spouseQuebecDiploma] || 0;
     breakdown.spouseQuebecDiploma = spouseQuebecDiplomaScore;
     totalScore += spouseQuebecDiplomaScore;
+    console.log(`Spouse Quebec diploma: ${spouseQuebecDiploma} = ${spouseQuebecDiplomaScore} points`);
     
     // Spouse Quebec work
     const spouseQuebecWork = getFormValue('spouseQuebecWork');
     const spouseQuebecWorkScore = scoringData.spouseQuebecWork[spouseQuebecWork] || 0;
     breakdown.spouseQuebecWork = spouseQuebecWorkScore;
     totalScore += spouseQuebecWorkScore;
+    console.log(`Spouse Quebec work: ${spouseQuebecWork} = ${spouseQuebecWorkScore} points`);
   }
   
   // Store results
@@ -2554,6 +2518,7 @@ function calculateScore() {
     hasSpouse: hasSpouse
   };
   
+  console.log(`Total score: ${totalScore} points`);
   return totalScore;
 }
 
@@ -2609,24 +2574,32 @@ function updateResultsDisplay() {
   
   updateElement('quebec-diploma', breakdown.quebecDiploma);
   updateElement('quebec-work', breakdown.quebecWork);
-  updateElement('quebec-needs', breakdown.quebecNeeds);
-  updateElement('quebec-study-duration', breakdown.quebecStudyDuration);
   
   updateElement('age-score', breakdown.age);
   updateElement('education-score', breakdown.education);
   updateElement('work-experience-score', breakdown.workExperience);
   
   updateElement('job-offer-score', breakdown.jobOffer);
+  updateElement('profession-score', breakdown.profession);
+  updateElement('profession-experience-score', breakdown.professionExperience);
+  updateElement('authorization-score', breakdown.professionalAuthorization);
+  updateElement('study-score', breakdown.quebecStudyDuration);
+  updateElement('outside-montreal-score', breakdown.outsideMontreal);
   updateElement('family-score', breakdown.family);
-  updateElement('profession-score', 0); // Not implemented in this version
-  updateElement('authorization-score', 0); // Not implemented in this version
   
-  if (results.hasSpouse) {
-    updateElement('spouse-french', breakdown.spouseFrench);
-    updateElement('spouse-age', breakdown.spouseAge);
-    updateElement('spouse-education', breakdown.spouseEducation);
-    updateElement('spouse-quebec-diploma', breakdown.spouseQuebecDiploma);
-    updateElement('spouse-quebec-work', breakdown.spouseQuebecWork);
+  // Update spouse breakdown
+  const spouseBreakdown = document.getElementById('spouse-breakdown');
+  if (spouseBreakdown) {
+    if (results.hasSpouse) {
+      spouseBreakdown.style.display = 'block';
+      updateElement('spouse-french-score', breakdown.spouseFrench);
+      updateElement('spouse-age-score', breakdown.spouseAge);
+      updateElement('spouse-quebec-work-score', breakdown.spouseQuebecWork);
+      updateElement('spouse-education-score', breakdown.spouseEducation);
+      updateElement('spouse-quebec-diploma-score', breakdown.spouseQuebecDiploma);
+    } else {
+      spouseBreakdown.style.display = 'none';
+    }
   }
 }
 
@@ -2642,7 +2615,7 @@ function downloadResults() {
   // Create downloadable content
   let content = `RÉSULTATS DU CALCULATEUR ARRIMA PSTQ 2025\n`;
   content += `===========================================\n\n`;
-  content += `Score total: ${results.totalScore} points sur 1400\n\n`;
+  content += `Score total: ${results.totalScore} points sur 1600\n\n`;
   
   content += `DÉTAIL DES POINTS:\n\n`;
   
@@ -2655,9 +2628,7 @@ function downloadResults() {
   
   content += `Facteurs Québec:\n`;
   content += `- Diplôme du Québec: ${breakdown.quebecDiploma || 0} pts\n`;
-  content += `- Expérience de travail au Québec: ${breakdown.quebecWork || 0} pts\n`;
-  content += `- Réponse aux besoins du Québec: ${breakdown.quebecNeeds || 0} pts\n`;
-  content += `- Durée d'études au Québec: ${breakdown.quebecStudyDuration || 0} pts\n\n`;
+  content += `- Expérience de travail au Québec: ${breakdown.quebecWork || 0} pts\n\n`;
   
   content += `Capital humain:\n`;
   content += `- Âge: ${breakdown.age || 0} pts\n`;
@@ -2666,6 +2637,11 @@ function downloadResults() {
   
   content += `Facteurs additionnels:\n`;
   content += `- Offre d'emploi: ${breakdown.jobOffer || 0} pts\n`;
+  content += `- Profession (diagnostic main-d'œuvre): ${breakdown.profession || 0} pts\n`;
+  content += `- Expérience dans la profession: ${breakdown.professionExperience || 0} pts\n`;
+  content += `- Autorisation professionnelle: ${breakdown.professionalAuthorization || 0} pts\n`;
+  content += `- Études au Québec (sans diplôme): ${breakdown.quebecStudyDuration || 0} pts\n`;
+  content += `- Séjour hors Montréal: ${breakdown.outsideMontreal || 0} pts\n`;
   content += `- Famille proche au Québec: ${breakdown.family || 0} pts\n\n`;
   
   if (results.hasSpouse) {
