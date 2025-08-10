@@ -1063,6 +1063,175 @@ body {
     display: flex;
   }
 }
+
+/* Exit-Intent Bundle Offer Popup Styles */
+.bundle-popup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  padding: 1rem;
+}
+
+.bundle-popup-content {
+  background: white;
+  border-radius: 1rem;
+  max-width: 32rem;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+}
+
+.bundle-header {
+  text-align: center;
+  padding: 2rem 2rem 1rem 2rem;
+}
+
+.bundle-header h2 {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #1f2937;
+  margin-bottom: 1rem;
+}
+
+.bundle-header p {
+  color: #6b7280;
+  line-height: 1.6;
+}
+
+.bundle-image {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+
+.bundle-benefits {
+  padding: 0 2rem;
+  margin-bottom: 1.5rem;
+}
+
+.bundle-benefits h3 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #1f2937;
+  margin-bottom: 1rem;
+}
+
+.bundle-benefits ul {
+  list-style: none;
+  padding: 0;
+}
+
+.bundle-benefits li {
+  color: #374151;
+  margin-bottom: 0.5rem;
+  padding-left: 1.5rem;
+  position: relative;
+}
+
+.bundle-benefits li:before {
+  content: "✅";
+  position: absolute;
+  left: 0;
+}
+
+.bundle-cta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 0 2rem 2rem 2rem;
+}
+
+.bundle-button {
+  padding: 0.875rem 1.5rem;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: none;
+  background: #2563eb;
+  color: white;
+}
+
+.bundle-button:hover {
+  background: #1d4ed8;
+  transform: translateY(-1px);
+}
+
+.bundle-button.secondary {
+  background: transparent;
+  color: #6b7280;
+  border: 1px solid #d1d5db;
+}
+
+.bundle-button.secondary:hover {
+  background: #f9fafb;
+  color: #374151;
+}
+
+.bundle-email-form {
+  padding: 0 2rem;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-group label {
+  display: block;
+  font-weight: 500;
+  color: #374151;
+  margin-bottom: 0.5rem;
+}
+
+.form-group input[type="email"] {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.375rem;
+  font-size: 1rem;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  cursor: pointer;
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+.checkbox-label input[type="checkbox"] {
+  margin-top: 0.125rem;
+}
+
+@media (max-width: 640px) {
+  .bundle-popup-content {
+    margin: 1rem;
+    max-height: 95vh;
+  }
+  
+  .bundle-header {
+    padding: 1.5rem 1.5rem 1rem 1.5rem;
+  }
+  
+  .bundle-cta {
+    padding: 0 1.5rem 1.5rem 1.5rem;
+  }
+  
+  .bundle-email-form {
+    padding: 0 1.5rem;
+  }
+}
 </style>
 </head>
 <body>
@@ -2465,7 +2634,11 @@ function handleEmailSubmit(e) {
   })
   .then(response => {
     if (response.ok) {
+      // Mark email as submitted to prevent exit-intent popup
+      localStorage.setItem('emailSubmitted', 'true');
+      
       alert(`Merci ! Le guide sera envoyé à ${email}. Vérifiez votre boîte de réception dans quelques minutes.`);
+
       document.getElementById('email-form').reset();
     } else {
       alert('Erreur lors de l\'envoi du formulaire. Veuillez réessayer.');
@@ -2475,8 +2648,204 @@ function handleEmailSubmit(e) {
     alert('Erreur lors de l\'envoi du formulaire. Veuillez réessayer.');
   });
 }
+
+// Exit-Intent Popup for Bundle Offer
+let exitIntentShown = false;
+let emailSubmitted = false;
+
+// Check if user has already submitted email
+function checkEmailSubmission() {
+  const submitted = localStorage.getItem('emailSubmitted');
+  if (submitted === 'true') {
+    emailSubmitted = true;
+  }
+}
+
+// Exit-intent detection
+function handleExitIntent(e) {
+  if (exitIntentShown || emailSubmitted) return;
+  
+  // Check if mouse is moving towards the top of the page (exit intent)
+  if (e.clientY <= 0) {
+    showBundleOffer();
+    exitIntentShown = true;
+  }
+}
+
+// Show bundle offer popup
+function showBundleOffer() {
+  const popup = document.getElementById('bundle-popup');
+  if (popup) {
+    popup.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+  }
+}
+
+// Show bundle email form
+function showBundleEmailForm() {
+  document.getElementById('bundle-offer').style.display = 'none';
+  document.getElementById('bundle-email-form').style.display = 'block';
+}
+
+// Hide bundle offer popup
+function hideBundleOffer() {
+  const popup = document.getElementById('bundle-popup');
+  if (popup) {
+    popup.style.display = 'none';
+    document.body.style.overflow = 'auto';
+  }
+}
+
+// Handle bundle email form submission
+function handleBundleEmailSubmit(e) {
+  e.preventDefault();
+
+  const email = document.getElementById('bundle-email-input').value;
+  const checkboxes = document.querySelectorAll('#bundle-email-form input[type="checkbox"]');
+
+  let allChecked = true;
+  checkboxes.forEach(checkbox => {
+    if (!checkbox.checked) {
+      allChecked = false;
+    }
+  });
+
+  if (!allChecked) {
+    alert('Veuillez accepter toutes les conditions pour continuer.');
+    return;
+  }
+
+  // Send data to webhook
+  const data = {
+    email: email,
+    consent_guide: checkboxes[0].checked,
+    consent_policy: checkboxes[1].checked,
+    source: 'bundle_exit_intent'
+  };
+  
+  fetch('https://hook.eu2.make.com/cvxlt8bumn11o3shf9ordtjy1f399r15', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(data)
+  })
+  .then(response => {
+    if (response.ok) {
+      // Download both documents simultaneously
+      downloadBothDocuments();
+      
+      // Hide popup and show success message
+      hideBundleOffer();
+      alert(`Merci ! Les deux guides seront envoyés à ${email}. Vérifiez votre boîte de réception dans quelques minutes.`);
+
+      
+      // Reset form
+      document.getElementById('bundle-email-form').reset();
+    } else {
+      alert('Erreur lors de l\'envoi du formulaire. Veuillez réessayer.');
+    }
+  })
+  .catch(() => {
+    alert('Erreur lors de l\'envoi du formulaire. Veuillez réessayer.');
+  });
+}
+
+// Download both documents
+function downloadBothDocuments() {
+  // Download Document Guide
+  const docGuideLink = document.createElement('a');
+  docGuideLink.href = 'https://cdn.prod.website-files.com/681220773670b14061a4d1d1/68980468dd99b37c6c631eef_Guide%20des%20Documents%20Essentiels%20pour%20l%27Immigration%20au%20Québec.pdf';
+  docGuideLink.download = 'Guide_Documents_Essentiels_Immigration_Quebec.pdf';
+  docGuideLink.click();
+
+  // Download Job Guide
+  const jobGuideLink = document.createElement('a');
+  jobGuideLink.href = 'https://cdn.prod.website-files.com/681220773670b14061a4d1d1/68980468dd99b37c6c631eef_Objectif%20Emploi%20_%20Guide%20pour%20Trouver%20une%20Offre%20d%27emploi%20Validée%20au%20Québec.pdf';
+  jobGuideLink.download = 'Objectif_Emploi_Guide_Recherche_Emploi_Quebec.pdf';
+  jobGuideLink.click();
+}
+
+// Initialize exit-intent functionality
+function initializeExitIntent() {
+  checkEmailSubmission();
+  document.addEventListener('mouseleave', handleExitIntent);
+}
+
+// Initialize when page loads
+document.addEventListener('DOMContentLoaded', initializeExitIntent);
 </script>
 
 <!-- iframe-resizer script removed to prevent embedded page URL display issues -->
+
+<!-- Exit-Intent Bundle Offer Popup -->
+<div id="bundle-popup" class="bundle-popup" style="display: none;">
+  <div class="bundle-popup-content">
+    <!-- Step 1: Bundle Offer -->
+    <div id="bundle-offer" class="bundle-offer">
+      <div class="bundle-header">
+        <h2>Attendez ! Doublez vos ressources, gratuitement.</h2>
+        <p>Ne partez pas avec un seul guide. Obtenez nos deux manuels stratégiques les plus téléchargés : le Guide des Documents Essentiels et Objectif Emploi pour vous aider dans votre recherche d'emploi.</p>
+      </div>
+      
+      <div class="bundle-image">
+        <img src="https://cdn.prod.website-files.com/681220773670b14061a4d1d1/68980468dd99b37c6c631eef_Guide%20des%20Documents%20Essentiels%20pour%20l%27Immigration%20au%20Québec.pdf" alt="Guide des Documents Essentiels" style="width: 80px; height: 100px; object-fit: cover; border-radius: 8px; margin-right: 10px;">
+        <img src="https://cdn.prod.website-files.com/681220773670b14061a4d1d1/68980468dd99b37c6c631eef_Objectif%20Emploi%20_%20Guide%20pour%20Trouver%20une%20Offre%20d%27emploi%20Validée%20au%20Québec.pdf" alt="Objectif Emploi" style="width: 80px; height: 100px; object-fit: cover; border-radius: 8px;">
+      </div>
+      
+      <div class="bundle-benefits">
+        <h3>Ce que vous obtiendrez :</h3>
+        <ul>
+          <li>✅ Guide complet des documents requis pour l'immigration</li>
+          <li>✅ Stratégies pour trouver un emploi validé au Québec</li>
+          <li>✅ Conseils d'experts en immigration</li>
+          <li>✅ Téléchargement immédiat des deux guides</li>
+        </ul>
+      </div>
+      
+      <div class="bundle-cta">
+        <button onclick="showBundleEmailForm()" class="bundle-button">Oui, je veux les deux guides !</button>
+        <button onclick="hideBundleOffer()" class="bundle-button secondary">Non merci, je pars</button>
+      </div>
+    </div>
+    
+    <!-- Step 2: Email Collection -->
+    <div id="bundle-email-form" class="bundle-email-form" style="display: none;">
+      <div class="bundle-header">
+        <h2>Parfait ! Entrez votre email pour recevoir les guides</h2>
+        <p>Nous vous enverrons un email avec les liens de téléchargement dans quelques minutes.</p>
+      </div>
+      
+      <form id="bundle-email-form" onsubmit="handleBundleEmailSubmit(event)">
+        <div class="form-group">
+          <label for="bundle-email-input">Votre adresse email :</label>
+          <input type="email" id="bundle-email-input" required placeholder="votre@email.com">
+        </div>
+        
+        <div class="form-group">
+          <label class="checkbox-label">
+            <input type="checkbox" required>
+            <span class="checkmark"></span>
+            J'accepte de recevoir le guide des documents essentiels et le guide emploi par email
+          </label>
+        </div>
+        
+        <div class="form-group">
+          <label class="checkbox-label">
+            <input type="checkbox" required>
+            <span class="checkmark"></span>
+            J'accepte la politique de confidentialité et les conditions d'utilisation
+          </label>
+        </div>
+        
+        <div class="bundle-cta">
+          <button type="submit" class="bundle-button">Envoyer et télécharger les guides</button>
+          <button type="button" onclick="showBundleOffer()" class="bundle-button secondary">Retour</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
 </body>
 </html>
