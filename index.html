@@ -3190,12 +3190,10 @@ function handleMidwayLeadSubmit(e) {
   e.preventDefault();
   
   const email = document.getElementById('midway-email-input').value;
-  const name = document.getElementById('midway-name-input').value;
   
   // Store email submission
   localStorage.setItem('emailSubmitted', 'true');
   localStorage.setItem('userEmail', email);
-  localStorage.setItem('userName', name);
   
   // Hide the form
   hideMidwayLeadCapture();
@@ -3208,12 +3206,10 @@ function handleEnhancedLeadSubmit(e) {
   e.preventDefault();
   
   const email = document.getElementById('enhanced-email-input').value;
-  const name = document.getElementById('enhanced-name-input').value;
   
   // Store email submission
   localStorage.setItem('emailSubmitted', 'true');
   localStorage.setItem('userEmail', email);
-  localStorage.setItem('userName', name);
   
   // Download the bundle immediately
   downloadBundleDocuments();
@@ -3670,20 +3666,45 @@ function handleBundleEmailSubmit(e) {
 
 function downloadBundleDocuments() {
   try {
-    // Download the Guide des Documents Essentiels PDF
-    const link = document.createElement('a');
-    link.href = 'https://cdn.prod.website-files.com/681220773670b14061a4d1d1/686d26b345311108bbb57432_Guide%20des%20Documents%20Essentiels_JarriveQuebec.pdf';
-    link.download = 'Guide_des_Documents_Essentiels_JarriveQuebec.pdf';
-    link.target = '_blank';
-    link.style.display = 'none';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    // Download first document - Guide des Documents Essentiels
+    const link1 = document.createElement('a');
+    link1.href = 'https://cdn.prod.website-files.com/681220773670b14061a4d1d1/686d26b345311108bbb57432_Guide%20des%20Documents%20Essentiels_JarriveQuebec.pdf';
+    link1.download = 'Guide_des_Documents_Essentiels_JarriveQuebec.pdf';
+    link1.style.display = 'none';
+    document.body.appendChild(link1);
+    link1.click();
+    document.body.removeChild(link1);
+    
+    // Small delay to ensure first download starts
+    setTimeout(() => {
+      // Download second document - Objectif Emploi
+      const link2 = document.createElement('a');
+      link2.href = 'https://cdn.prod.website-files.com/681220773670b14061a4d1d1/68980468dd99b37c6c631eef_Objectif%20Emploi%20_%20Guide%20pour%20Trouver%20une%20Offre%20d%27emploi%20Validée%20au%20Québec.pdf';
+      link2.download = 'Objectif_Emploi_Guide_Emploi_Quebec.pdf';
+      link2.style.display = 'none';
+      document.body.appendChild(link2);
+      link2.click();
+      document.body.removeChild(link2);
+    }, 500);
     
   } catch (error) {
     console.error('Download error:', error);
-    // Fallback: open in new tab if download fails
-    window.open('https://cdn.prod.website-files.com/681220773670b14061a4d1d1/686d26b345311108bbb57432_Guide%20des%20Documents%20Essentiels_JarriveQuebec.pdf', '_blank');
+    // Fallback: try to download both files if the main method fails
+    try {
+      const link1 = document.createElement('a');
+      link1.href = 'https://cdn.prod.website-files.com/681220773670b14061a4d1d1/686d26b345311108bbb57432_Guide%20des%20Documents%20Essentiels_JarriveQuebec.pdf';
+      link1.download = 'Guide_des_Documents_Essentiels_JarriveQuebec.pdf';
+      link1.click();
+      
+      setTimeout(() => {
+        const link2 = document.createElement('a');
+        link2.href = 'https://cdn.prod.website-files.com/681220773670b14061a4d1d1/68980468dd99b37c6c631eef_Objectif%20Emploi%20_%20Guide%20pour%20Trouver%20une%20Offre%20d%27emploi%20Validée%20au%20Québec.pdf';
+        link2.download = 'Objectif_Emploi_Guide_Emploi_Quebec.pdf';
+        link2.click();
+      }, 500);
+    } catch (fallbackError) {
+      console.error('Fallback download also failed:', fallbackError);
+    }
   }
 }
 
@@ -3723,12 +3744,10 @@ function handleFloatingLeadSubmit(e) {
   e.preventDefault();
   
   const email = document.getElementById('floating-email-input').value;
-  const name = document.getElementById('floating-name-input').value;
   
   // Store email submission
   localStorage.setItem('emailSubmitted', 'true');
   localStorage.setItem('userEmail', email);
-  localStorage.setItem('userName', name);
   
   // Hide the form
   hideFloatingLeadForm();
@@ -3891,7 +3910,6 @@ function initializeExitIntent() {
         <li>✅ Votre score Arrima complet</li>
         <li>📋 Guide des Documents Essentiels</li>
         <li>🎯 Guide Objectif Emploi Québec</li>
-        <li>📧 Conseils personnalisés par email</li>
       </ul>
     </div>
     
@@ -3901,15 +3919,14 @@ function initializeExitIntent() {
         <input type="email" id="midway-email-input" class="form-input" placeholder="votre@email.com" required>
       </div>
       
-      <div class="form-group">
-        <label for="midway-name-input" class="form-label">Votre prénom</label>
-        <input type="text" id="midway-name-input" class="form-input" placeholder="Votre prénom">
-      </div>
-      
       <div class="checkbox-group">
         <label class="checkbox-label">
           <input type="checkbox" required class="checkbox-input">
-          <span class="checkbox-text">Je veux recevoir mes guides et j'accepte les communications de J'arrive Québec.</span>
+          <span class="checkbox-text">Je veux recevoir le guide et j'accepte de recevoir les communications de J'arrive Québec. Je peux me désinscrire à tout moment.</span>
+        </label>
+        <label class="checkbox-label">
+          <input type="checkbox" required class="checkbox-input">
+          <span class="checkbox-text">J'ai lu et j'accepte la <a href="#" class="link">Politique de Confidentialité</a> et les <a href="#" class="link">Conditions Générales d'Utilisation</a>.</span>
         </label>
       </div>
       
@@ -3929,7 +3946,6 @@ function initializeExitIntent() {
         <li>✅ Calculateur de score Arrima complet</li>
         <li>📋 Guide des Documents Essentiels</li>
         <li>🎯 Guide Objectif Emploi Québec</li>
-        <li>📧 Conseils personnalisés par email</li>
       </ul>
     </div>
     
@@ -3939,15 +3955,14 @@ function initializeExitIntent() {
         <input type="email" id="floating-email-input" class="form-input" placeholder="votre@email.com" required>
       </div>
       
-      <div class="form-group">
-        <label for="floating-name-input" class="form-label">Votre prénom</label>
-        <input type="text" id="floating-name-input" class="form-input" placeholder="Votre prénom">
-      </div>
-      
       <div class="checkbox-group">
         <label class="checkbox-label">
           <input type="checkbox" required class="checkbox-input">
-          <span class="checkbox-text">Je veux recevoir mes guides et j'accepte les communications de J'arrive Québec.</span>
+          <span class="checkbox-text">Je veux recevoir le guide et j'accepte de recevoir les communications de J'arrive Québec. Je peux me désinscrire à tout moment.</span>
+        </label>
+        <label class="checkbox-label">
+          <input type="checkbox" required class="checkbox-input">
+          <span class="checkbox-text">J'ai lu et j'accepte la <a href="#" class="link">Politique de Confidentialité</a> et les <a href="#" class="link">Conditions Générales d'Utilisation</a>.</span>
         </label>
       </div>
       
