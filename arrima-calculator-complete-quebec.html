@@ -1352,17 +1352,7 @@ body {
         </div>
 
         <div class="form-card">
-          <!-- Scoring Mode Indicator -->
-          <div id="scoring-mode-indicator" class="alert info" style="margin: 0 1.5rem 1rem 1.5rem; text-align: center; font-weight: 600;">
-            <div style="display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
-              <span id="scoring-mode-icon">👤</span>
-              <span id="scoring-mode-text">Mode de calcul : Colonne 2 (sans conjoint)</span>
-            </span>
-            </div>
-            <div style="margin-top: 0.5rem; font-size: 0.875rem; font-weight: normal;">
-              <strong>Note :</strong> Quand vous sélectionnez "J'ai un conjoint", le système utilise automatiquement la <strong>Colonne 3 (avec conjoint)</strong> du PDF officiel pour tous les calculs. Les nouveaux critères (profession, études, séjour hors Montréal) sont maintenant inclus.
-            </div>
-          </div>
+
           
           <div class="form-header">
             <h2 class="section-title">
@@ -1397,9 +1387,6 @@ body {
                 <h3 class="group-title">Âge</h3>
                 <div class="alert info">
                   <strong>Maximum :</strong> <span id="age-max-points">120 points</span> pour l'âge
-                  <div id="age-scoring-indicator" style="margin-top: 0.5rem; font-size: 0.875rem; color: #1e40af;">
-                    <strong>Scoring utilisé :</strong> <span id="age-scoring-type">Colonne 2 (sans conjoint)</span>
-                  </div>
                 </div>
                 <div class="form-group">
                   <label class="form-label">Votre âge</label>
@@ -1464,10 +1451,10 @@ body {
                   <select id="frenchOral" class="form-select">
                     <option value="">Sélectionnez votre niveau</option>
                     <option value="1-4">Niveau 1 à 4 (0 points)</option>
-                    <option value="5-6">Niveau 5 ou 6 (38 points)</option>
-                    <option value="7-8">Niveau 7 ou 8 (44 points)</option>
-                    <option value="9-10">Niveau 9 ou 10 (50 points)</option>
-                    <option value="11-12">Niveau 11 ou 12 (50 points)</option>
+                    <option value="5-6">Niveau 5 ou 6 (30 points)</option>
+                    <option value="7-8">Niveau 7 ou 8 (35 points)</option>
+                    <option value="9-10">Niveau 9 ou 10 (40 points)</option>
+                    <option value="11-12">Niveau 11 ou 12 (40 points)</option>
                   </select>
                 </div>
                 <div class="form-group">
@@ -1475,10 +1462,10 @@ body {
                   <select id="frenchOralProduction" class="form-select">
                     <option value="">Sélectionnez votre niveau</option>
                     <option value="1-4">Niveau 1 à 4 (0 points)</option>
-                    <option value="5-6">Niveau 5 ou 6 (38 points)</option>
-                    <option value="7-8">Niveau 7 ou 8 (44 points)</option>
-                    <option value="9-10">Niveau 9 ou 10 (50 points)</option>
-                    <option value="11-12">Niveau 11 ou 12 (50 points)</option>
+                    <option value="5-6">Niveau 5 ou 6 (30 points)</option>
+                    <option value="7-8">Niveau 7 ou 8 (35 points)</option>
+                    <option value="9-10">Niveau 9 ou 10 (40 points)</option>
+                    <option value="11-12">Niveau 11 ou 12 (40 points)</option>
                   </select>
                 </div>
                 <div class="form-group">
@@ -1486,10 +1473,10 @@ body {
                   <select id="frenchWritten" class="form-select">
                     <option value="">Sélectionnez votre niveau</option>
                     <option value="1-4">Niveau 1 à 4 (0 points)</option>
-                    <option value="5-6">Niveau 5 ou 6 (38 points)</option>
-                    <option value="7-8">Niveau 7 ou 8 (44 points)</option>
-                    <option value="9-10">Niveau 9 ou 10 (50 points)</option>
-                    <option value="11-12">Niveau 11 ou 12 (50 points)</option>
+                    <option value="5-6">Niveau 5 ou 6 (30 points)</option>
+                    <option value="7-8">Niveau 7 ou 8 (35 points)</option>
+                    <option value="9-10">Niveau 9 ou 10 (40 points)</option>
+                    <option value="11-12">Niveau 11 ou 12 (40 points)</option>
                   </select>
                 </div>
                 <div class="form-group">
@@ -1497,10 +1484,10 @@ body {
                   <select id="frenchWrittenProduction" class="form-select">
                     <option value="">Sélectionnez votre niveau</option>
                     <option value="1-4">Niveau 1 à 4 (0 points)</option>
-                    <option value="5-6">Niveau 5 ou 6 (38 points)</option>
-                    <option value="7-8">Niveau 7 ou 8 (44 points)</option>
-                    <option value="9-10">Niveau 9 ou 10 (50 points)</option>
-                    <option value="11-12">Niveau 11 ou 12 (50 points)</option>
+                    <option value="5-6">Niveau 5 ou 6 (30 points)</option>
+                    <option value="7-8">Niveau 7 ou 8 (35 points)</option>
+                    <option value="9-10">Niveau 9 ou 10 (40 points)</option>
+                    <option value="11-12">Niveau 11 ou 12 (40 points)</option>
                   </select>
                 </div>
               </div>
@@ -1512,9 +1499,6 @@ body {
                 <h3 class="group-title">Niveau de scolarité</h3>
                             <div class="alert info">
               <strong>Maximum :</strong> <span id="education-max-points">130 points</span> pour le niveau de scolarité
-              <div id="education-scoring-indicator" style="margin-top: 0.5rem; font-size: 0.875rem; color: #1e40af;">
-                <strong>Scoring utilisé :</strong> <span id="education-scoring-type">Colonne 2 (sans conjoint)</span>
-              </div>
             </div>
                 <div class="form-group">
                   <label class="form-label">Votre plus haut niveau de scolarité</label>
@@ -1544,9 +1528,6 @@ body {
                 <h3 class="group-title">Expérience de travail</h3>
                             <div class="alert info">
               <strong>Maximum :</strong> <span id="work-max-points">70 points</span> pour l'expérience de travail
-              <div id="work-scoring-indicator" style="margin-top: 0.5rem; font-size: 0.875rem; color: #1e40af;">
-                <strong>Scoring utilisé :</strong> <span id="work-scoring-type">Colonne 2 (sans conjoint)</span>
-              </div>
             </div>
                 <div class="form-group">
                   <label class="form-label">Durée de votre expérience de travail (au cours des 5 dernières années)</label>
@@ -1912,11 +1893,9 @@ const totalSections = 6;
 let hasSpouse = false;
 let calculatorResults = null;
 
-// Scoring data - Column 1: No spouse, Column 2: With spouse (3rd column in PDF)
-// Note: When hasSpouse = true, the system automatically uses the "with spouse" scoring
-// which corresponds to the 3rd column in the official PDF (Colonne 3: Avec conjoint)
+// Scoring data - Column 1: No spouse, Column 2: With spouse
 const scoringData = {
-  // Age scoring - Column 1 vs Column 2 (3rd column in PDF)
+  // Age scoring - Column 1 vs Column 2
   age: {
     '18-19': 110, '20-30': 120, '31': 110, '32': 100, '33': 90, '34': 80,
     '35': 75, '36': 70, '37': 65, '38': 60, '39': 55, '40': 50,
@@ -1933,7 +1912,7 @@ const scoringData = {
     '41': 5, '42': 4, '43': 3, '44': 2, '45+': 0
   },
   
-  // French skills scoring - Column 1 vs Column 2 (3rd column in PDF)
+  // French skills scoring - Column 1 vs Column 2
   french: {
     '1-4': 0, '5-6': 38, '7-8': 44, '9-10': 50, '11-12': 50
   },
@@ -1944,7 +1923,7 @@ const scoringData = {
     '1-3': 0, '4': 4, '5-6': 6, '7-8': 8, '9-10': 10, '11-12': 10
   },
   
-  // Education scoring - Column 1 vs Column 2 (3rd column in PDF)
+  // Education scoring - Column 1 vs Column 2
   education: {
     'secondaire-general': 13, 'secondaire-pro-600': 13, 'secondaire-pro-900': 26,
     'secondaire-pro-1an': 26, 'postsecondaire-general': 39, 'postsecondaire-tech-900': 52,
@@ -1970,7 +1949,7 @@ const scoringData = {
     'universitaire-3': 20
   },
   
-  // Work experience scoring - Column 1 vs Column 2 (3rd column in PDF)
+  // Work experience scoring - Column 1 vs Column 2
   workExperience: {
     '0-11': 0, '12-23': 20, '24-35': 40, '36-47': 50, '48+': 70
   },
@@ -1978,7 +1957,7 @@ const scoringData = {
     '0-11': 0, '12-23': 15, '24-35': 30, '36-47': 35, '48+': 50
   },
   
-  // Quebec diploma scoring - Column 1 vs Column 2 (3rd column in PDF)
+  // Quebec diploma scoring - Column 1 vs Column 2
   quebecDiploma: {
     'aucun': 0, 'secondaire-general': 20, 'secondaire-pro-600': 20, 'secondaire-pro-900': 40,
     'postsecondaire-general': 60, 'postsecondaire-tech-900': 80, 'postsecondaire-tech-3': 120,
@@ -1994,7 +1973,7 @@ const scoringData = {
     'universitaire-medical': 30, 'universitaire-3': 30
   },
   
-  // Quebec work experience scoring - Column 1 vs Column 2 (3rd column in PDF)
+  // Quebec work experience scoring - Column 1 vs Column 2
   quebecWorkExperience: {
     '0-11': 0, '12-23': 40, '24-35': 80, '36-47': 120, '48-60': 160
   },
@@ -2224,36 +2203,9 @@ function updateMaxPointsDisplays() {
   if (educationMaxPoints) educationMaxPoints.textContent = hasSpouse ? '110 points' : '130 points';
   if (workMaxPoints) workMaxPoints.textContent = hasSpouse ? '50 points' : '70 points';
   
-  // Update scoring indicators to show which column is being used
-  updateScoringIndicators();
 }
 
-function updateScoringIndicators() {
-  const ageScoringType = document.getElementById('age-scoring-type');
-  const frenchScoringType = document.getElementById('french-scoring-type');
-  const educationScoringType = document.getElementById('education-scoring-type');
-  const workScoringType = document.getElementById('work-scoring-type');
-  
-  if (ageScoringType) {
-    ageScoringType.textContent = hasSpouse ? 'Colonne 3 (avec conjoint)' : 'Colonne 2 (sans conjoint)';
-    ageScoringType.style.color = hasSpouse ? '#dc2626' : '#1e40af';
-  }
-  
-  if (frenchScoringType) {
-    frenchScoringType.textContent = hasSpouse ? 'Colonne 3 (avec conjoint)' : 'Colonne 2 (sans conjoint)';
-    frenchScoringType.style.color = hasSpouse ? '#dc2626' : '#1e40af';
-  }
-  
-  if (educationScoringType) {
-    educationScoringType.textContent = hasSpouse ? 'Colonne 3 (avec conjoint)' : 'Colonne 2 (sans conjoint)';
-    educationScoringType.style.color = hasSpouse ? '#dc2626' : '#1e40af';
-  }
-  
-  if (workScoringType) {
-    workScoringType.textContent = hasSpouse ? 'Colonne 3 (avec conjoint)' : 'Colonne 2 (sans conjoint)';
-    workScoringType.style.color = hasSpouse ? '#dc2626' : '#1e40af';
-  }
-}
+
 
 function navigateToSection(sectionIndex) {
   currentSection = sectionIndex;
