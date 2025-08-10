@@ -1203,8 +1203,9 @@ body {
                     <div class="breakdown-item"><span>Famille proche au Québec:</span><span id="family-score" class="breakdown-value">0 pts</span></div>
                     <div class="breakdown-item"><span>Profession:</span><span id="profession-score" class="breakdown-value">0 pts</span></div>
                     <div class="breakdown-item"><span>Autorisation professionnelle:</span><span id="authorization-score" class="breakdown-value">0 pts</span></div>
-                    <div class="breakdown-item"><span>Études au Québec:</span><span id="study-score" class="breakdown-value">0 pts</span></div>
-                    <div class="breakdown-item"><span>Séjour hors Montréal:</span><span id="outside-montreal-score" class="breakdown-value">0 pts</span></div>
+                    <div class="breakdown-item"><span>Résidence hors Montréal:</span><span id="outside-montreal-residence-score" class="breakdown-value">0 pts</span></div>
+                    <div class="breakdown-item"><span>Travail hors Montréal:</span><span id="outside-montreal-work-score" class="breakdown-value">0 pts</span></div>
+                    <div class="breakdown-item"><span>Études hors Montréal:</span><span id="outside-montreal-study-score" class="breakdown-value">0 pts</span></div>
                     <div id="spouse-breakdown" class="spouse-breakdown" style="display: none;">
                       <div class="breakdown-item"><span>Français conjoint:</span><span id="spouse-french-score" class="breakdown-value">0 pts</span></div>
                       <div class="breakdown-item"><span>Âge conjoint:</span><span id="spouse-age-score" class="breakdown-value">0 pts</span></div>
@@ -1537,6 +1538,67 @@ body {
                   </select>
                 </div>
               </div>
+              <div class="separator"></div>
+              <div class="section-group">
+                <h3 class="group-title">Séjour à l'extérieur de Montréal</h3>
+                <div class="alert info">
+                  <strong>Maximum :</strong> 40 points pour la durée de résidence à l'extérieur de la CMM
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Durée de votre résidence à l'extérieur de la Communauté métropolitaine de Montréal</label>
+                  <select id="outsideMontrealResidence" class="form-select">
+                    <option value="">Sélectionnez la durée</option>
+                    <option value="0-5">0 à 5 mois (0 points)</option>
+                    <option value="6-11">6 à 11 mois (6 points)</option>
+                    <option value="12-23">12 à 23 mois (16 points)</option>
+                    <option value="24-35">24 à 35 mois (24 points)</option>
+                    <option value="36-47">36 à 47 mois (32 points)</option>
+                    <option value="48+">48 mois et plus (40 points)</option>
+                  </select>
+                </div>
+              </div>
+              <div class="separator"></div>
+              <div class="section-group">
+                <h3 class="group-title">Expérience de travail à l'extérieur de Montréal</h3>
+                <div class="alert info">
+                  <strong>Maximum :</strong> 60 points pour l'expérience de travail à l'extérieur de la CMM
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Durée de votre expérience de travail à l'extérieur de la Communauté métropolitaine de Montréal</label>
+                  <select id="outsideMontrealWork" class="form-select">
+                    <option value="">Sélectionnez la durée</option>
+                    <option value="0-5">0 à 5 mois (0 points)</option>
+                    <option value="6-11">6 à 11 mois (9 points)</option>
+                    <option value="12-23">12 à 23 mois (24 points)</option>
+                    <option value="24-35">24 à 35 mois (36 points)</option>
+                    <option value="36-47">36 à 47 mois (48 points)</option>
+                    <option value="48+">48 mois et plus (60 points)</option>
+                  </select>
+                </div>
+              </div>
+              <div class="separator"></div>
+              <div class="section-group">
+                <h3 class="group-title">Séjour d'études à l'extérieur de Montréal</h3>
+                <div class="alert info">
+                  <strong>Maximum :</strong> 30 points pour les études à l'extérieur de la CMM
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Statut de vos études à l'extérieur de la Communauté métropolitaine de Montréal</label>
+                  <select id="outsideMontrealStudyStatus" class="form-select">
+                    <option value="">Sélectionnez votre situation</option>
+                    <option value="aucun">Aucune étude à l'extérieur de la CMM (0 points)</option>
+                    <option value="termine">Études terminées à l'extérieur de la CMM</option>
+                    <option value="encours">Études en cours à l'extérieur de la CMM</option>
+                  </select>
+                </div>
+                <div id="study-duration-group" class="form-group" style="display: none;">
+                  <label class="form-label">Durée de vos études</label>
+                  <select id="outsideMontrealStudyDuration" class="form-select">
+                    <option value="">Sélectionnez la durée</option>
+                    <!-- Options will be populated dynamically based on status -->
+                  </select>
+                </div>
+              </div>
             </div>
 
             <!-- Section 4: Emploi -->
@@ -1852,6 +1914,18 @@ const scoringData = {
   },
   familyMember: {
     'aucun': 0, 'lie-ressortissant': 10, 'lie-conjoint': 5
+  },
+  outsideMontrealResidence: {
+    '0-5': 0, '6-11': 6, '12-23': 16, '24-35': 24, '36-47': 32, '48+': 40
+  },
+  outsideMontrealWork: {
+    '0-5': 0, '6-11': 9, '12-23': 24, '24-35': 36, '36-47': 48, '48+': 60
+  },
+  outsideMontrealStudyTermine: {
+    '0-5': 0, '6-11': 1, '12-23': 3, '24-35': 5, '36-47': 8, '48+': 10
+  },
+  outsideMontrealStudyEnCours: {
+    '0-5': 0, '6-11': 5, '12-23': 12, '24-35': 18, '36-47': 24, '48+': 30
   }
 };
 
@@ -2063,6 +2137,7 @@ function initializeApp() {
   initializeNavigation();
   initializeFormHandlers();
   initializeSpouseToggle();
+  initializeMontrealStudy();
   initializeResultsHandlers();
   updateSectionDisplay();
   updateNavigation();
@@ -2120,6 +2195,54 @@ function initializeSpouseToggle() {
       calculateScore();
     });
   });
+}
+
+function initializeMontrealStudy() {
+  const studyStatusSelect = document.getElementById('outsideMontrealStudyStatus');
+  const studyDurationGroup = document.getElementById('study-duration-group');
+  const studyDurationSelect = document.getElementById('outsideMontrealStudyDuration');
+  
+  if (studyStatusSelect && studyDurationGroup && studyDurationSelect) {
+    studyStatusSelect.addEventListener('change', function() {
+      const status = this.value;
+      
+      if (status === 'aucun') {
+        studyDurationGroup.style.display = 'none';
+        studyDurationSelect.value = '';
+      } else if (status === 'termine' || status === 'encours') {
+        studyDurationGroup.style.display = 'block';
+        
+        // Clear and populate duration options based on status
+        studyDurationSelect.innerHTML = '';
+        const defaultOption = document.createElement('option');
+        defaultOption.value = '';
+        defaultOption.textContent = 'Sélectionnez la durée';
+        studyDurationSelect.appendChild(defaultOption);
+        
+        const durations = [
+          { value: '0-5', label: 'Moins de 6 mois' },
+          { value: '6-11', label: '6 à 11 mois' },
+          { value: '12-23', label: '12 à 23 mois' },
+          { value: '24-35', label: '24 à 35 mois' },
+          { value: '36-47', label: '36 à 47 mois' },
+          { value: '48+', label: '48 mois et plus' }
+        ];
+        
+        const scoreData = status === 'termine' ? scoringData.outsideMontrealStudyTermine : scoringData.outsideMontrealStudyEnCours;
+        
+        durations.forEach(duration => {
+          const option = document.createElement('option');
+          option.value = duration.value;
+          option.textContent = `${duration.label} (${scoreData[duration.value]} points)`;
+          studyDurationSelect.appendChild(option);
+        });
+      }
+      
+      calculateScore();
+    });
+    
+    studyDurationSelect.addEventListener('change', calculateScore);
+  }
 }
 
 function initializeResultsHandlers() {
@@ -2323,6 +2446,32 @@ function calculateScore() {
   breakdown.family = familyScore;
   totalScore += familyScore;
   
+  // Outside Montreal residence
+  const outsideMontrealResidence = getFormValue('outsideMontrealResidence');
+  const outsideMontrealResidenceScore = scoringData.outsideMontrealResidence[outsideMontrealResidence] || 0;
+  breakdown.outsideMontrealResidence = outsideMontrealResidenceScore;
+  totalScore += outsideMontrealResidenceScore;
+  
+  // Outside Montreal work experience
+  const outsideMontrealWork = getFormValue('outsideMontrealWork');
+  const outsideMontrealWorkScore = scoringData.outsideMontrealWork[outsideMontrealWork] || 0;
+  breakdown.outsideMontrealWork = outsideMontrealWorkScore;
+  totalScore += outsideMontrealWorkScore;
+  
+  // Outside Montreal study
+  const outsideMontrealStudyStatus = getFormValue('outsideMontrealStudyStatus');
+  const outsideMontrealStudyDuration = getFormValue('outsideMontrealStudyDuration');
+  let outsideMontrealStudyScore = 0;
+  
+  if (outsideMontrealStudyStatus === 'termine' && outsideMontrealStudyDuration) {
+    outsideMontrealStudyScore = scoringData.outsideMontrealStudyTermine[outsideMontrealStudyDuration] || 0;
+  } else if (outsideMontrealStudyStatus === 'encours' && outsideMontrealStudyDuration) {
+    outsideMontrealStudyScore = scoringData.outsideMontrealStudyEnCours[outsideMontrealStudyDuration] || 0;
+  }
+  
+  breakdown.outsideMontrealStudy = outsideMontrealStudyScore;
+  totalScore += outsideMontrealStudyScore;
+  
   // Spouse factors
   if (hasSpouse) {
     // Spouse French
@@ -2421,8 +2570,9 @@ function updateResultsDisplay() {
   updateElement('family-score', breakdown.family);
   updateElement('profession-score', 0); // Not implemented in this version
   updateElement('authorization-score', 0); // Not implemented in this version
-  updateElement('study-score', 0); // Not implemented in this version
-  updateElement('outside-montreal-score', 0); // Not implemented in this version
+  updateElement('outside-montreal-residence-score', breakdown.outsideMontrealResidence);
+  updateElement('outside-montreal-work-score', breakdown.outsideMontrealWork);
+  updateElement('outside-montreal-study-score', breakdown.outsideMontrealStudy);
   
   // Update spouse breakdown
   const spouseBreakdown = document.getElementById('spouse-breakdown');

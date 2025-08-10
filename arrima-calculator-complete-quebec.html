@@ -1386,6 +1386,8 @@ body {
                   <div class="breakdown-items">
                     <div class="breakdown-item"><span>Diplôme du Québec:</span><span id="quebec-diploma" class="breakdown-value">0 pts</span></div>
                     <div class="breakdown-item"><span>Expérience de travail au Québec:</span><span id="quebec-work" class="breakdown-value">0 pts</span></div>
+                    <div class="breakdown-item"><span>Réponse aux besoins du Québec:</span><span id="quebec-needs" class="breakdown-value">0 pts</span></div>
+                    <div class="breakdown-item"><span>Durée d'études au Québec:</span><span id="quebec-study-duration" class="breakdown-value">0 pts</span></div>
                   </div>
                 </div>
                 <div class="breakdown-section">
@@ -1736,6 +1738,42 @@ body {
                   </select>
                 </div>
               </div>
+              <div class="separator"></div>
+              <div class="section-group">
+                <h3 class="group-title">Réponse aux besoins du Québec et aux priorités gouvernementales</h3>
+                <div class="alert info">
+                  <strong>Maximum :</strong> 50 points pour la réponse aux besoins du Québec
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Votre domaine d'études répond-il aux besoins du Québec ?</label>
+                  <select id="quebecNeeds" class="form-select">
+                    <option value="">Sélectionnez votre domaine</option>
+                    <option value="aucun">Aucun domaine prioritaire (0 points)</option>
+                    <option value="formation-professionnelle">Formation professionnelle (30 points)</option>
+                    <option value="formation-technique">Formation technique (30 points)</option>
+                    <option value="formation-universitaire">Formation universitaire (50 points)</option>
+                  </select>
+                </div>
+              </div>
+              <div class="separator"></div>
+              <div class="section-group">
+                <h3 class="group-title">Durée du séjour d'études sans diplôme au Québec</h3>
+                <div class="alert info">
+                  <strong>Maximum :</strong> 30 points pour la durée du séjour d'études
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Combien de temps avez-vous étudié au Québec sans obtenir de diplôme ?</label>
+                  <select id="quebecStudyDuration" class="form-select">
+                    <option value="">Sélectionnez la durée</option>
+                    <option value="aucun">Aucun séjour d'études (0 points)</option>
+                    <option value="moins-6mois">Moins de 6 mois (5 points)</option>
+                    <option value="6-11mois">6 à 11 mois (10 points)</option>
+                    <option value="12-23mois">12 à 23 mois (15 points)</option>
+                    <option value="24-35mois">24 à 35 mois (20 points)</option>
+                    <option value="36mois-plus">36 mois et plus (30 points)</option>
+                  </select>
+                </div>
+              </div>
             </div>
 
             <!-- Section 4: Emploi -->
@@ -2080,6 +2118,12 @@ const scoringData = {
   },
   familyMember: {
     'aucun': 0, 'lie-ressortissant': 10, 'lie-conjoint': 5
+  },
+  quebecNeeds: {
+    'aucun': 0, 'formation-professionnelle': 30, 'formation-technique': 30, 'formation-universitaire': 50
+  },
+  quebecStudyDuration: {
+    'aucun': 0, 'moins-6mois': 5, '6-11mois': 10, '12-23mois': 15, '24-35mois': 20, '36mois-plus': 30
   }
 };
 
@@ -2443,6 +2487,18 @@ function calculateScore() {
   breakdown.quebecWork = quebecWorkScore;
   totalScore += quebecWorkScore;
   
+  // Quebec needs and priorities
+  const quebecNeeds = getFormValue('quebecNeeds');
+  const quebecNeedsScore = scoringData.quebecNeeds[quebecNeeds] || 0;
+  breakdown.quebecNeeds = quebecNeedsScore;
+  totalScore += quebecNeedsScore;
+  
+  // Quebec study duration without diploma
+  const quebecStudyDuration = getFormValue('quebecStudyDuration');
+  const quebecStudyDurationScore = scoringData.quebecStudyDuration[quebecStudyDuration] || 0;
+  breakdown.quebecStudyDuration = quebecStudyDurationScore;
+  totalScore += quebecStudyDurationScore;
+  
   // Job offer
   const jobOffer = getFormValue('jobOffer');
   const jobOfferScore = scoringData.jobOffer[jobOffer] || 0;
@@ -2479,7 +2535,7 @@ function calculateScore() {
     totalScore += spouseEducationScore;
     
     // Spouse Quebec diploma
-    const spouseQuebecDiploma = getFormValue('spouseQuebecDiploma');
+    const spouseQuebecDiploma = getFormValue('spouseEducation');
     const spouseQuebecDiplomaScore = scoringData.spouseQuebecDiploma[spouseQuebecDiploma] || 0;
     breakdown.spouseQuebecDiploma = spouseQuebecDiplomaScore;
     totalScore += spouseQuebecDiplomaScore;
@@ -2553,6 +2609,8 @@ function updateResultsDisplay() {
   
   updateElement('quebec-diploma', breakdown.quebecDiploma);
   updateElement('quebec-work', breakdown.quebecWork);
+  updateElement('quebec-needs', breakdown.quebecNeeds);
+  updateElement('quebec-study-duration', breakdown.quebecStudyDuration);
   
   updateElement('age-score', breakdown.age);
   updateElement('education-score', breakdown.education);
@@ -2562,22 +2620,13 @@ function updateResultsDisplay() {
   updateElement('family-score', breakdown.family);
   updateElement('profession-score', 0); // Not implemented in this version
   updateElement('authorization-score', 0); // Not implemented in this version
-  updateElement('study-score', 0); // Not implemented in this version
-  updateElement('outside-montreal-score', 0); // Not implemented in this version
   
-  // Update spouse breakdown
-  const spouseBreakdown = document.getElementById('spouse-breakdown');
-  if (spouseBreakdown) {
-    if (results.hasSpouse) {
-      spouseBreakdown.style.display = 'block';
-      updateElement('spouse-french-score', breakdown.spouseFrench);
-      updateElement('spouse-age-score', breakdown.spouseAge);
-      updateElement('spouse-quebec-work-score', breakdown.spouseQuebecWork);
-      updateElement('spouse-education-score', breakdown.spouseEducation);
-      updateElement('spouse-quebec-diploma-score', breakdown.spouseQuebecDiploma);
-    } else {
-      spouseBreakdown.style.display = 'none';
-    }
+  if (results.hasSpouse) {
+    updateElement('spouse-french', breakdown.spouseFrench);
+    updateElement('spouse-age', breakdown.spouseAge);
+    updateElement('spouse-education', breakdown.spouseEducation);
+    updateElement('spouse-quebec-diploma', breakdown.spouseQuebecDiploma);
+    updateElement('spouse-quebec-work', breakdown.spouseQuebecWork);
   }
 }
 
@@ -2606,7 +2655,9 @@ function downloadResults() {
   
   content += `Facteurs Québec:\n`;
   content += `- Diplôme du Québec: ${breakdown.quebecDiploma || 0} pts\n`;
-  content += `- Expérience de travail au Québec: ${breakdown.quebecWork || 0} pts\n\n`;
+  content += `- Expérience de travail au Québec: ${breakdown.quebecWork || 0} pts\n`;
+  content += `- Réponse aux besoins du Québec: ${breakdown.quebecNeeds || 0} pts\n`;
+  content += `- Durée d'études au Québec: ${breakdown.quebecStudyDuration || 0} pts\n\n`;
   
   content += `Capital humain:\n`;
   content += `- Âge: ${breakdown.age || 0} pts\n`;
