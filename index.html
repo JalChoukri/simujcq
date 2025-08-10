@@ -1706,6 +1706,10 @@ body {
   }
 }
 </style>
+
+<!-- html2canvas library for screenshot capture -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
 </head>
 <body>
 
@@ -3493,6 +3497,68 @@ function downloadResults() {
     return;
   }
   
+  // Find the results container to capture
+  const resultsContainer = document.querySelector('.results-container');
+  if (!resultsContainer) {
+    alert('Impossible de trouver les résultats à télécharger.');
+    return;
+  }
+  
+  // Show loading message
+  const downloadBtn = document.getElementById('download-results');
+  const originalText = downloadBtn.textContent;
+  downloadBtn.textContent = '📸 Capture en cours...';
+  downloadBtn.disabled = true;
+  
+  // Use html2canvas to capture the results as an image
+  if (typeof html2canvas !== 'undefined') {
+    html2canvas(resultsContainer, {
+      scale: 2, // Higher quality
+      useCORS: true,
+      allowTaint: true,
+      backgroundColor: '#ffffff',
+      width: resultsContainer.offsetWidth,
+      height: resultsContainer.offsetHeight
+    }).then(canvas => {
+      // Convert canvas to blob and download
+      canvas.toBlob(function(blob) {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `resultats-arrima-${new Date().toISOString().split('T')[0]}.png`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(url);
+        
+        // Reset button
+        downloadBtn.textContent = originalText;
+        downloadBtn.disabled = false;
+      }, 'image/png');
+    }).catch(error => {
+      console.error('Screenshot capture failed:', error);
+      alert('Erreur lors de la capture d\'écran. Tentative de téléchargement en format texte...');
+      
+      // Fallback to text download
+      downloadResultsAsText();
+      
+      // Reset button
+      downloadBtn.textContent = originalText;
+      downloadBtn.disabled = false;
+    });
+  } else {
+    // Fallback to text download if html2canvas is not available
+    alert('Fonctionnalité de capture d\'écran non disponible. Téléchargement en format texte...');
+    downloadResultsAsText();
+    
+    // Reset button
+    downloadBtn.textContent = originalText;
+    downloadBtn.disabled = false;
+  }
+}
+
+// Fallback function for text download
+function downloadResultsAsText() {
   const results = calculatorResults;
   const breakdown = results.breakdown;
   
@@ -3508,7 +3574,7 @@ function downloadResults() {
   content += `- Production orale: ${breakdown.frenchOralProd || 0} pts\n`;
   content += `- Compréhension écrite: ${breakdown.frenchWritten || 0} pts\n`;
   content += `- Production écrite: ${breakdown.frenchWrittenProd || 0} pts\n`;
-  content += `- Sous-total français: ${breakdown.frenchTotal || 0} pts\n\n`;
+  content += `- Sous-total français: ${breakdown.frenchTotal || 0} pts\n`;
   
   content += `Facteurs Québec:\n`;
   content += `- Diplôme du Québec: ${breakdown.quebecDiploma || 0} pts\n`;
