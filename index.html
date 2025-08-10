@@ -3620,6 +3620,16 @@ function hideExitIntentPopup() {
   document.body.style.overflow = 'auto';
 }
 
+// Function to reset popup state for testing or when needed
+function resetExitIntentPopup() {
+  localStorage.removeItem('emailSubmitted');
+  // Reset popup state variables
+  if (typeof initializeExitIntent === 'function') {
+    // Re-initialize exit intent
+    initializeExitIntent();
+  }
+}
+
 function handleExitIntentChoice(choice) {
   if (choice === 'yes') {
     // Show the bundle form
@@ -3670,6 +3680,7 @@ function downloadBundleDocuments() {
     const link1 = document.createElement('a');
     link1.href = 'https://cdn.prod.website-files.com/681220773670b14061a4d1d1/686d26b345311108bbb57432_Guide%20des%20Documents%20Essentiels_JarriveQuebec.pdf';
     link1.download = 'Guide_des_Documents_Essentiels_JarriveQuebec.pdf';
+    link1.target = '_blank';
     link1.style.display = 'none';
     document.body.appendChild(link1);
     link1.click();
@@ -3681,6 +3692,7 @@ function downloadBundleDocuments() {
       const link2 = document.createElement('a');
       link2.href = 'https://cdn.prod.website-files.com/681220773670b14061a4d1d1/68980468dd99b37c6c631eef_Objectif%20Emploi%20_%20Guide%20pour%20Trouver%20une%20Offre%20d%27emploi%20Validée%20au%20Québec.pdf';
       link2.download = 'Objectif_Emploi_Guide_Emploi_Quebec.pdf';
+      link2.target = '_blank';
       link2.style.display = 'none';
       document.body.appendChild(link2);
       link2.click();
@@ -3694,12 +3706,14 @@ function downloadBundleDocuments() {
       const link1 = document.createElement('a');
       link1.href = 'https://cdn.prod.website-files.com/681220773670b14061a4d1d1/686d26b345311108bbb57432_Guide%20des%20Documents%20Essentiels_JarriveQuebec.pdf';
       link1.download = 'Guide_des_Documents_Essentiels_JarriveQuebec.pdf';
+      link1.target = '_blank';
       link1.click();
       
       setTimeout(() => {
         const link2 = document.createElement('a');
         link2.href = 'https://cdn.prod.website-files.com/681220773670b14061a4d1d1/68980468dd99b37c6c631eef_Objectif%20Emploi%20_%20Guide%20pour%20Trouver%20une%20Offre%20d%27emploi%20Validée%20au%20Québec.pdf';
         link2.download = 'Objectif_Emploi_Guide_Emploi_Quebec.pdf';
+        link2.target = '_blank';
         link2.click();
       }, 500);
     } catch (fallbackError) {
@@ -3762,15 +3776,29 @@ function initializeExitIntent() {
   let scrollDepth = 0;
   let timeOnPage = 0;
   let popupShown = false;
+  let lastPopupTime = 0;
+  
+  // Function to check if we should show popup
+  function shouldShowPopup() {
+    const now = Date.now();
+    const timeSinceLastPopup = now - lastPopupTime;
+    const emailSubmitted = localStorage.getItem('emailSubmitted');
+    
+    // Show popup if:
+    // 1. Not already shown in this session AND
+    // 2. Either no email submitted OR more than 1 hour since last popup
+    return !popupShown && (!emailSubmitted || timeSinceLastPopup > 3600000);
+  }
   
   // Track scroll depth
   window.addEventListener('scroll', function() {
     const scrollPercent = Math.round((window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100);
-    if (scrollPercent > 70 && !popupShown) {
+    if (scrollPercent > 70 && shouldShowPopup()) {
       setTimeout(() => {
-        if (!popupShown && !localStorage.getItem('emailSubmitted')) {
+        if (shouldShowPopup()) {
           showExitIntentPopup();
           popupShown = true;
+          lastPopupTime = Date.now();
         }
       }, 2000);
     }
@@ -3779,26 +3807,28 @@ function initializeExitIntent() {
   // Track time on page
   setInterval(() => {
     timeOnPage += 1;
-    if (timeOnPage >= 60 && !popupShown && !localStorage.getItem('emailSubmitted')) { // 60 seconds
+    if (timeOnPage >= 60 && shouldShowPopup()) { // 60 seconds
       showExitIntentPopup();
       popupShown = true;
+      lastPopupTime = Date.now();
     }
   }, 1000);
   
   // Mouse leave detection
   document.addEventListener('mouseleave', function(e) {
-    if (e.clientY <= 0 && !popupShown) {
+    if (e.clientY <= 0 && shouldShowPopup()) {
       mouseLeaveCount++;
       if (mouseLeaveCount >= 1) {
         showExitIntentPopup();
         popupShown = true;
+        lastPopupTime = Date.now();
       }
     }
   });
   
   // Tab/window close detection
   window.addEventListener('beforeunload', function(e) {
-    if (localStorage.getItem('emailSubmitted') !== 'true' && !popupShown) {
+    if (shouldShowPopup()) {
       showExitIntentPopup();
       e.preventDefault();
       e.returnValue = '';
@@ -3810,9 +3840,10 @@ function initializeExitIntent() {
   function resetInactivityTimer() {
     clearTimeout(inactivityTimer);
     inactivityTimer = setTimeout(() => {
-      if (!popupShown && !localStorage.getItem('emailSubmitted')) {
+      if (shouldShowPopup()) {
         showExitIntentPopup();
         popupShown = true;
+        lastPopupTime = Date.now();
       }
     }, 300000); // 5 minutes of inactivity
   }
