@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="referrer" content="no-referrer">
 <title>Calculateur Arrima PSTQ 2025</title>
 <style>
 * {
@@ -794,10 +795,39 @@ body {
 }
 
 .lead-magnet-body {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-  align-items: flex-start;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  align-items: center;
+}
+
+.lead-magnet-image-mobile {
+  display: block;
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.lead-magnet-image-mobile img {
+  max-width: 200px;
+  border-radius: 0.5rem;
+  box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
+  background: linear-gradient(135deg, #dbeafe 0%, #e0e7ff 100%);
+  padding: 2rem;
+}
+
+.lead-magnet-image-desktop {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #dbeafe 0%, #e0e7ff 100%);
+  padding: 2rem;
+  border-radius: 0.5rem;
+}
+
+.lead-magnet-image-desktop img {
+  max-width: 200px;
+  border-radius: 0.5rem;
+  box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
 }
 
 .lead-magnet-form {
@@ -1014,6 +1044,176 @@ body {
     grid-template-columns: 1fr !important;
     gap: 1.5rem !important;
   }
+  
+  .lead-magnet-image-mobile {
+    display: block;
+  }
+  
+  .lead-magnet-image-desktop {
+    display: none;
+  }
+}
+
+@media (min-width: 769px) {
+  .lead-magnet-image-mobile {
+    display: none;
+  }
+  
+  .lead-magnet-image-desktop {
+    display: flex;
+  }
+}
+
+/* Exit Intent Popup Styles */
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  backdrop-filter: blur(4px);
+}
+
+.popup-content {
+  background: white;
+  border-radius: 1rem;
+  max-width: 500px;
+  width: 90%;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  animation: popupSlideIn 0.3s ease-out;
+}
+
+@keyframes popupSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.popup-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem 1.5rem 1rem 1.5rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.popup-header h3 {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #1f2937;
+  margin: 0;
+}
+
+.popup-close {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: #6b7280;
+  cursor: pointer;
+  padding: 0.25rem;
+  border-radius: 0.25rem;
+  transition: all 0.2s;
+}
+
+.popup-close:hover {
+  background: #f3f4f6;
+  color: #374151;
+}
+
+.popup-body {
+  padding: 1.5rem;
+}
+
+.popup-body p {
+  margin-bottom: 1rem;
+  color: #374151;
+  line-height: 1.6;
+}
+
+.popup-features {
+  margin: 1.5rem 0;
+}
+
+.feature-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+  color: #374151;
+}
+
+.feature-icon {
+  font-size: 1.25rem;
+}
+
+.popup-cta {
+  font-weight: 600;
+  color: #1f2937;
+  text-align: center;
+  margin: 1.5rem 0;
+}
+
+.popup-buttons {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.popup-btn {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  min-width: 120px;
+}
+
+.popup-btn.primary {
+  background: #2563eb;
+  color: white;
+}
+
+.popup-btn.primary:hover {
+  background: #1d4ed8;
+}
+
+.popup-btn.secondary {
+  background: #f3f4f6;
+  color: #374151;
+  border: 1px solid #d1d5db;
+}
+
+.popup-btn.secondary:hover {
+  background: #e5e7eb;
+}
+
+@media (max-width: 640px) {
+  .popup-content {
+    width: 95%;
+    margin: 1rem;
+  }
+  
+  .popup-buttons {
+    flex-direction: column;
+  }
+  
+  .popup-btn {
+    width: 100%;
+  }
 }
 </style>
 </head>
@@ -1229,13 +1429,6 @@ body {
               </svg>
               Télécharger les résultats
             </button>
-            <button id="reset-calculator" class="action-button secondary">
-              <svg style="width: 1rem; height: 1rem;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <polyline points="1,4 1,10 7,10"/>
-                <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/>
-              </svg>
-              Refaire le simulateur
-            </button>
           </div>
 
           <div class="lead-magnet-card">
@@ -1243,36 +1436,42 @@ body {
               <div class="lead-magnet-header">
                 <h2>Ne partez pas les mains vides !</h2>
               </div>
-              <div class="lead-magnet-body" style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; align-items: center;">
-  <div class="lead-magnet-form">
-    <div class="guide-title">
-      <h3>Téléchargez gratuitement votre Guide des Documents Essentiels Arrima</h3>
-    </div>
-    <p class="guide-description">La prochaine étape cruciale est de rassembler les bons documents. Pour vous aider, nous avons cherché et compilé pour vous les documents essentiels à préparer pour commencer votre procédure sans stress !</p>
-    <form id="email-form" class="email-form">
-      <div class="form-group">
-        <label for="email-input" class="form-label">Adresse courriel *</label>
-        <input type="email" id="email-input" class="form-input" placeholder="votre.courriel@exemple.com" required>
-      </div>
-      <div class="checkbox-group">
-        <label class="checkbox-label">
-          <input type="checkbox" required class="checkbox-input">
-          <span class="checkbox-text">Je veux recevoir le guide et j'accepte de recevoir les communications de J'arrive Québec. Je peux me désinscrire à tout moment.</span>
-        </label>
-        <label class="checkbox-label">
-          <input type="checkbox" required class="checkbox-input">
-          <span class="checkbox-text">J'ai lu et j'accepte la <a href="#" class="link">Politique de Confidentialité</a> et les <a href="#" class="link">Conditions Générales d'Utilisation</a>.</span>
-        </label>
-      </div>
-      <button type="submit" class="submit-button">📋 Télécharger mon guide gratuit</button>
-    </form>
-  </div>
-  
-  <!-- PDF Cover Image -->
-  <div style="display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #dbeafe 0%, #e0e7ff 100%); padding: 2rem; border-radius: 0.5rem;">
-    <img src="https://cdn.prod.website-files.com/681220773670b14061a4d1d1/6866686f8cc5ea3917cfc594_doc-essentiels-cover.jpg" alt="Guide PDF - Documents Essentiels pour l'Immigration au Québec" style="max-width: 200px; border-radius: 0.5rem; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);" />
-  </div>
-</div>
+              
+              <!-- PDF Cover Image - Mobile First -->
+              <div class="lead-magnet-image-mobile">
+                <img src="https://cdn.prod.website-files.com/681220773670b14061a4d1d1/6866686f8cc5ea3917cfc594_doc-essentiels-cover.jpg" alt="Guide PDF - Documents Essentiels pour l'Immigration au Québec" />
+              </div>
+              
+              <div class="lead-magnet-body">
+                <div class="lead-magnet-form">
+                  <div class="guide-title">
+                    <h3>Téléchargez gratuitement votre Guide des Documents Essentiels Arrima</h3>
+                  </div>
+                  <p class="guide-description">La prochaine étape cruciale est de rassembler les bons documents. Pour vous aider, nous avons cherché et compilé pour vous les documents essentiels à préparer pour commencer votre procédure sans stress !</p>
+                  <form id="email-form" class="email-form">
+                    <div class="form-group">
+                      <label for="email-input" class="form-label">Adresse courriel *</label>
+                      <input type="email" id="email-input" class="form-input" placeholder="votre.courriel@exemple.com" required>
+                    </div>
+                    <div class="checkbox-group">
+                      <label class="checkbox-label">
+                        <input type="checkbox" required class="checkbox-input">
+                        <span class="checkbox-text">Je veux recevoir le guide et j'accepte de recevoir les communications de J'arrive Québec. Je peux me désinscrire à tout moment.</span>
+                      </label>
+                      <label class="checkbox-label">
+                        <input type="checkbox" required class="checkbox-input">
+                        <span class="checkbox-text">J'ai lu et j'accepte la <a href="#" class="link">Politique de Confidentialité</a> et les <a href="#" class="link">Conditions Générales d'Utilisation</a>.</span>
+                      </label>
+                    </div>
+                    <button type="submit" class="submit-button">📋 Télécharger mon guide gratuit</button>
+                  </form>
+                </div>
+                
+                <!-- PDF Cover Image - Desktop -->
+                <div class="lead-magnet-image-desktop">
+                  <img src="https://cdn.prod.website-files.com/681220773670b14061a4d1d1/6866686f8cc5ea3917cfc594_doc-essentiels-cover.jpg" alt="Guide PDF - Documents Essentiels pour l'Immigration au Québec" />
+                </div>
+              </div>
             </div>
           </div>
 
@@ -1578,68 +1777,61 @@ body {
             <div id="section-5" class="form-section">
               <div id="spouse-content" style="display: none;">
                 <div class="alert info">
-                  <strong>Maximum :</strong> 120 points pour les informations du conjoint
+                  <strong>Maximum :</strong> 130 points pour les informations du conjoint
                 </div>
-                <!-- Français du conjoint -->
                 <div class="section-group">
-                    <h3 class="group-title">Connaissance du français du conjoint</h3>
-                    <p class="group-subtitle">Maximum : 40 points</p>
-
-                    <div class="form-grid">
-                        <div class="form-group">
-                            <label class="form-label">Compréhension orale</label>
-                            <select id="spouseFrenchOral" class="form-select">
-                                <option value="">Sélectionnez le niveau</option>
-                                <option value="1-3">Niveau 1 à 3 (0 points)</option>
-                                <option value="4">Niveau 4 (4 points)</option>
-                                <option value="5-6">Niveau 5 ou 6 (6 points)</option>
-                                <option value="7-8">Niveau 7 ou 8 (8 points)</option>
-                                <option value="9-10">Niveau 9 ou 10 (10 points)</option>
-                                <option value="11-12">Niveau 11 ou 12 (10 points)</option>
-                            </select>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="form-label">Production orale</label>
-                            <select id="spouseFrenchOralProduction" class="form-select">
-                                <option value="">Sélectionnez le niveau</option>
-                                <option value="1-3">Niveau 1 à 3 (0 points)</option>
-                                <option value="4">Niveau 4 (4 points)</option>
-                                <option value="5-6">Niveau 5 ou 6 (6 points)</option>
-                                <option value="7-8">Niveau 7 ou 8 (8 points)</option>
-                                <option value="9-10">Niveau 9 ou 10 (10 points)</option>
-                                <option value="11-12">Niveau 11 ou 12 (10 points)</option>
-                            </select>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="form-label">Compréhension écrite</label>
-                            <select id="spouseFrenchWritten" class="form-select">
-                                <option value="">Sélectionnez le niveau</option>
-                                <option value="1-3">Niveau 1 à 3 (0 points)</option>
-                                <option value="4">Niveau 4 (4 points)</option>
-                                <option value="5-6">Niveau 5 ou 6 (6 points)</option>
-                                <option value="7-8">Niveau 7 ou 8 (8 points)</option>
-                                <option value="9-10">Niveau 9 ou 10 (10 points)</option>
-                                <option value="11-12">Niveau 11 ou 12 (10 points)</option>
-                            </select>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="form-label">Production écrite</label>
-                            <select id="spouseFrenchWrittenProduction" class="form-select">
-                                <option value="">Sélectionnez le niveau</option>
-                                <option value="1-3">Niveau 1 à 3 (0 points)</option>
-                                <option value="4">Niveau 4 (4 points)</option>
-                                <option value="5-6">Niveau 5 ou 6 (6 points)</option>
-                                <option value="7-8">Niveau 7 ou 8 (8 points)</option>
-                                <option value="9-10">Niveau 9 ou 10 (10 points)</option>
-                                <option value="11-12">Niveau 11 ou 12 (10 points)</option>
-                            </select>
-                        </div>
+                  <h3 class="group-title">Connaissance du français du conjoint</h3>
+                  <div class="form-grid">
+                    <div class="form-group">
+                      <label class="form-label">Compréhension orale du conjoint</label>
+                      <select id="spouseFrenchOral" class="form-select">
+                        <option value="">Sélectionnez le niveau</option>
+                        <option value="1-3">Niveau 1 à 3 (0 points)</option>
+                        <option value="4">Niveau 4 (4 points)</option>
+                        <option value="5-6">Niveau 5 ou 6 (6 points)</option>
+                        <option value="7-8">Niveau 7 ou 8 (8 points)</option>
+                        <option value="9-10">Niveau 9 ou 10 (10 points)</option>
+                        <option value="11-12">Niveau 11 ou 12 (10 points)</option>
+                      </select>
                     </div>
+                    <div class="form-group">
+                      <label class="form-label">Production orale du conjoint</label>
+                      <select id="spouseFrenchOralProduction" class="form-select">
+                        <option value="">Sélectionnez le niveau</option>
+                        <option value="1-3">Niveau 1 à 3 (0 points)</option>
+                        <option value="4">Niveau 4 (4 points)</option>
+                        <option value="5-6">Niveau 5 ou 6 (6 points)</option>
+                        <option value="7-8">Niveau 7 ou 8 (8 points)</option>
+                        <option value="9-10">Niveau 9 ou 10 (10 points)</option>
+                        <option value="11-12">Niveau 11 ou 12 (10 points)</option>
+                      </select>
+                    </div>
+                    <div class="form-group">
+                      <label class="form-label">Compréhension écrite du conjoint</label>
+                      <select id="spouseFrenchWritten" class="form-select">
+                        <option value="">Sélectionnez le niveau</option>
+                        <option value="1-3">Niveau 1 à 3 (0 points)</option>
+                        <option value="4">Niveau 4 (4 points)</option>
+                        <option value="5-6">Niveau 5 ou 6 (6 points)</option>
+                        <option value="7-8">Niveau 7 ou 8 (8 points)</option>
+                        <option value="9-10">Niveau 9 ou 10 (10 points)</option>
+                        <option value="11-12">Niveau 11 ou 12 (10 points)</option>
+                      </select>
+                    </div>
+                    <div class="form-group">
+                      <label class="form-label">Production écrite du conjoint</label>
+                      <select id="spouseFrenchWrittenProduction" class="form-select">
+                        <option value="">Sélectionnez le niveau</option>
+                        <option value="1-3">Niveau 1 à 3 (0 points)</option>
+                        <option value="4">Niveau 4 (4 points)</option>
+                        <option value="5-6">Niveau 5 ou 6 (6 points)</option>
+                        <option value="7-8">Niveau 7 ou 8 (8 points)</option>
+                        <option value="9-10">Niveau 9 ou 10 (10 points)</option>
+                        <option value="11-12">Niveau 11 ou 12 (10 points)</option>
+                      </select>
+                    </div>
+                  </div>
                 </div>
-
                 <div class="separator"></div>
                 <div class="section-group">
                   <h3 class="group-title">Scolarité du conjoint</h3>
@@ -1676,7 +1868,7 @@ body {
                       <option value="aucun">Aucun diplôme du Québec (0 points)</option>
                       <option value="secondaire-general">Secondaire général complété (3 points)</option>
                       <option value="secondaire-pro-600">Secondaire professionnel 600-899h (3 points)</option>
-                      <option value="secondaire-pro-900">Secondaire professionnel 900h+ (6 points)</option>
+                      <option value="secondaire-pro-900">Secondaire professionnel 900h+ (3 points)</option>
                       <option value="postsecondaire-general">Postsecondaire général 2 ans (9 points)</option>
                       <option value="postsecondaire-tech-900">Postsecondaire technique 900h+ (12 points)</option>
                       <option value="postsecondaire-tech-3">Postsecondaire technique 3 ans (18 points)</option>
@@ -1759,6 +1951,42 @@ body {
             </p>
           </div>
         </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Exit Intent Popup -->
+<div id="exit-popup" class="popup-overlay" style="display: none;">
+  <div class="popup-content">
+    <div class="popup-header">
+      <h3>Attendez ! 🚀</h3>
+      <button class="popup-close" onclick="closeExitPopup()">&times;</button>
+    </div>
+    <div class="popup-body">
+      <p>Vous êtes sur le point de quitter le simulateur Arrima le plus complet et précis du Québec !</p>
+      <div class="popup-features">
+        <div class="feature-item">
+          <span class="feature-icon">✅</span>
+          <span>Grille officielle MIFI 2025</span>
+        </div>
+        <div class="feature-item">
+          <span class="feature-icon">✅</span>
+          <span>Calcul automatique en temps réel</span>
+        </div>
+        <div class="feature-item">
+          <span class="feature-icon">✅</span>
+          <span>Résultats détaillés et exportables</span>
+        </div>
+        <div class="feature-item">
+          <span class="feature-icon">✅</span>
+          <span>100% gratuit et sans inscription</span>
+        </div>
+      </div>
+      <p class="popup-cta">Voulez-vous vraiment partir sans connaître votre score ?</p>
+      <div class="popup-buttons">
+        <button class="popup-btn primary" onclick="closeExitPopup()">Continuer le simulateur</button>
+        <button class="popup-btn secondary" onclick="closeExitPopup()">Fermer</button>
       </div>
     </div>
   </div>
@@ -1915,127 +2143,6 @@ function updateAgeDropdown() {
   ageSelect.value = currentValue;
 }
 
-// Update French skills dropdowns based on spouse status
-function updateFrenchDropdowns() {
-  const frenchFields = ['frenchOral', 'frenchOralProduction', 'frenchWritten', 'frenchWrittenProduction'];
-  const frenchOptions = [
-    { value: '1-4', label: 'Niveau 1 à 4' },
-    { value: '5-6', label: 'Niveau 5 ou 6' },
-    { value: '7-8', label: 'Niveau 7 ou 8' },
-    { value: '9-10', label: 'Niveau 9 ou 10' },
-    { value: '11-12', label: 'Niveau 11 ou 12' }
-  ];
-  
-  frenchFields.forEach(fieldId => {
-    const select = document.getElementById(fieldId);
-    if (!select) return;
-    
-    const currentValue = select.value;
-    const pointsData = hasSpouse ? scoringData.frenchWithSpouse : scoringData.french;
-    
-    // Clear and rebuild options
-    select.innerHTML = '';
-    const defaultOption = document.createElement('option');
-    defaultOption.value = '';
-    defaultOption.textContent = 'Sélectionnez votre niveau';
-    select.appendChild(defaultOption);
-    
-    frenchOptions.forEach(opt => {
-      const option = document.createElement('option');
-      option.value = opt.value;
-      option.textContent = `${opt.label} (${pointsData[opt.value]} points)`;
-      select.appendChild(option);
-    });
-    
-    select.value = currentValue;
-  });
-}
-
-// Update education dropdown based on spouse status
-function updateEducationDropdown() {
-  const educationSelect = document.getElementById('education');
-  if (!educationSelect) return;
-  
-  const currentValue = educationSelect.value;
-  const pointsData = hasSpouse ? scoringData.educationWithSpouse : scoringData.education;
-  
-  const educationOptions = [
-    { value: 'secondaire-general', label: 'Secondaire général complété' },
-    { value: 'secondaire-pro-600', label: 'Secondaire professionnel 600-899h (Québec)' },
-    { value: 'secondaire-pro-900', label: 'Secondaire professionnel 900h+ (Québec)' },
-    { value: 'secondaire-pro-1an', label: 'Secondaire professionnel 1 an+ (hors Québec)' },
-    { value: 'postsecondaire-general', label: 'Postsecondaire général 2 ans' },
-    { value: 'postsecondaire-tech-900', label: 'Postsecondaire technique 900h+ (Québec)' },
-    { value: 'postsecondaire-tech-1-2', label: 'Postsecondaire technique 1-2 ans (hors Québec)' },
-    { value: 'postsecondaire-tech-3', label: 'Postsecondaire technique 3 ans' },
-    { value: 'universitaire-1-1', label: 'Universitaire 1er cycle 1 an' },
-    { value: 'universitaire-1-2', label: 'Universitaire 1er cycle 2 ans' },
-    { value: 'universitaire-1-3-4', label: 'Universitaire 1er cycle 3-4 ans' },
-    { value: 'universitaire-1-5', label: 'Universitaire 1er cycle 5 ans+' },
-    { value: 'universitaire-2-1', label: 'Universitaire 2e cycle 1 an' },
-    { value: 'universitaire-2-2', label: 'Universitaire 2e cycle 2 ans+' },
-    { value: 'universitaire-medical', label: 'Universitaire spécialisation médicale 2 ans+' },
-    { value: 'universitaire-3', label: 'Universitaire 3e cycle' }
-  ];
-  
-  // Clear and rebuild options
-  educationSelect.innerHTML = '';
-  const defaultOption = document.createElement('option');
-  defaultOption.value = '';
-  defaultOption.textContent = 'Sélectionnez votre niveau';
-  educationSelect.appendChild(defaultOption);
-  
-  educationOptions.forEach(opt => {
-    const option = document.createElement('option');
-    option.value = opt.value;
-    option.textContent = `${opt.label} (${pointsData[opt.value]} points)`;
-    educationSelect.appendChild(option);
-  });
-  
-  educationSelect.value = currentValue;
-}
-
-// Update work experience dropdown based on spouse status
-function updateWorkExperienceDropdown() {
-  const workSelect = document.getElementById('workExperience');
-  if (!workSelect) return;
-  
-  const currentValue = workSelect.value;
-  const pointsData = hasSpouse ? scoringData.workExperienceWithSpouse : scoringData.workExperience;
-  
-  const workOptions = [
-    { value: '0-11', label: 'Moins de 12 mois' },
-    { value: '12-23', label: '12 à 23 mois' },
-    { value: '24-35', label: '24 à 35 mois' },
-    { value: '36-47', label: '36 à 47 mois' },
-    { value: '48+', label: '48 mois et plus' }
-  ];
-  
-  // Clear and rebuild options
-  workSelect.innerHTML = '';
-  const defaultOption = document.createElement('option');
-  defaultOption.value = '';
-  defaultOption.textContent = 'Sélectionnez la durée';
-  workSelect.appendChild(defaultOption);
-  
-  workOptions.forEach(opt => {
-    const option = document.createElement('option');
-    option.value = opt.value;
-    option.textContent = `${opt.label} (${pointsData[opt.value]} points)`;
-    workSelect.appendChild(option);
-  });
-  
-  workSelect.value = currentValue;
-}
-
-// Update all dropdowns when spouse status changes
-function updateAllDropdowns() {
-  updateAgeDropdown();
-  updateFrenchDropdowns();
-  updateEducationDropdown();
-  updateWorkExperienceDropdown();
-}
-
 // Initialize app when DOM is loaded
 document.addEventListener('DOMContentLoaded', function() {
   initializeDisclaimer();
@@ -2064,10 +2171,11 @@ function initializeApp() {
   initializeFormHandlers();
   initializeSpouseToggle();
   initializeResultsHandlers();
+  initializeExitIntentPopup();
   updateSectionDisplay();
   updateNavigation();
   updateProgressBar();
-  updateAllDropdowns(); // <-- update all dropdowns on load
+  updateAgeDropdown(); // <-- update age dropdown on load
 }
 
 function initializeNavigation() {
@@ -2116,7 +2224,7 @@ function initializeSpouseToggle() {
       hasSpouse = this.value === 'true';
       toggleSpouseFields();
       updateMaxPointsDisplays();
-      updateAllDropdowns(); // <-- update all dropdowns immediately
+      updateAgeDropdown(); // <-- update age dropdown immediately
       calculateScore();
     });
   });
@@ -2124,8 +2232,32 @@ function initializeSpouseToggle() {
 
 function initializeResultsHandlers() {
   document.getElementById('download-results').addEventListener('click', downloadResults);
-  document.getElementById('reset-calculator').addEventListener('click', resetCalculator);
   document.getElementById('email-form').addEventListener('submit', handleEmailSubmit);
+}
+
+function initializeExitIntentPopup() {
+  let hasShownPopup = false;
+  
+  document.addEventListener('mouseleave', function(e) {
+    if (e.clientY <= 0 && !hasShownPopup) {
+      hasShownPopup = true;
+      showExitPopup();
+    }
+  });
+}
+
+function showExitPopup() {
+  const popup = document.getElementById('exit-popup');
+  if (popup) {
+    popup.style.display = 'flex';
+  }
+}
+
+function closeExitPopup() {
+  const popup = document.getElementById('exit-popup');
+  if (popup) {
+    popup.style.display = 'none';
+  }
 }
 
 function toggleSpouseFields() {
@@ -2326,8 +2458,17 @@ function calculateScore() {
   // Spouse factors
   if (hasSpouse) {
     // Spouse French
-    const spouseFrench = getFormValue('spouseFrench');
-    const spouseFrenchScore = scoringData.spouseFrench[spouseFrench] || 0;
+    const spouseFrenchOral = getFormValue('spouseFrenchOral');
+    const spouseFrenchOralProd = getFormValue('spouseFrenchOralProduction');
+    const spouseFrenchWritten = getFormValue('spouseFrenchWritten');
+    const spouseFrenchWrittenProd = getFormValue('spouseFrenchWrittenProduction');
+    const spouseFrenchScores = [
+      scoringData.spouseFrench[spouseFrenchOral] || 0,
+      scoringData.spouseFrench[spouseFrenchOralProd] || 0,
+      scoringData.spouseFrench[spouseFrenchWritten] || 0,
+      scoringData.spouseFrench[spouseFrenchWrittenProd] || 0
+    ];
+    const spouseFrenchScore = Math.max(...spouseFrenchScores);
     breakdown.spouseFrench = spouseFrenchScore;
     totalScore += spouseFrenchScore;
     
@@ -2501,29 +2642,7 @@ function downloadResults() {
   window.URL.revokeObjectURL(url);
 }
 
-function resetCalculator() {
-  if (confirm('Êtes-vous sûr de vouloir recommencer le simulateur ? Toutes vos données seront perdues.')) {
-    // Reset all form fields
-    document.querySelectorAll('select').forEach(select => {
-      select.selectedIndex = 0;
-    });
-    
-    document.querySelectorAll('input[type="radio"]').forEach(radio => {
-      radio.checked = radio.value === 'false' && radio.name === 'hasSpouse';
-    });
-    
-    // Reset variables
-    currentSection = 0;
-    hasSpouse = false;
-    calculatorResults = null;
-    
-    // Reset UI
-    toggleSpouseFields();
-    updateMaxPointsDisplays();
-    navigateToSection(0);
-    calculateScore();
-  }
-}
+
 
 function handleEmailSubmit(e) {
   e.preventDefault();
@@ -2572,6 +2691,6 @@ function handleEmailSubmit(e) {
 }
 </script>
 
-<script src="https://cdn.jsdelivr.net/npm/iframe-resizer/js/iframeResizer.contentWindow.min.js"></script>
+<!-- iframe-resizer script removed to prevent embedded page URL display issues -->
 </body>
 </html>
